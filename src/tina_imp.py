@@ -100,7 +100,7 @@ def shrinkModel(model, ro=0.75):
 				appendWeightAndBiasFromNeuron(hid_sizes, weightVectorsDown,
 											  biasDown, weightVectorsUp, neuron, layerIndex)
 		else:
-			raise Exception("No neurons left in layer..")
+			print("No neurons left in layer..")
 		for block in ["intermediate", "output"]:
 			if len(weightVectorsDown[block][layerIndex]) == 0:
 				neuron = sorted([x for x in scores if x["layerIndex"] == layerIndex
