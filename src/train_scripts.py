@@ -249,7 +249,7 @@ def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):
             if total_seen >= 96:
                 lossByEpoch.append(total_loss / total_seen)
                 accByEpoch.append(total_correct / total_seen)
-                total_loss, total_correct, total_seen = 0.0, 0.0, 0
                 print("Test Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
+                total_loss, total_correct, total_seen = 0.0, 0.0, 0
         print("Test loss", np.mean(lossByEpoch), "accuracy", np.mean(accByEpoch))
     return accByEpoch, lossByEpoch
