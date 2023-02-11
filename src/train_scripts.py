@@ -86,7 +86,6 @@ def train_ViT(opt):
         else:
             print(currCompRate, opt.targetCompRate, "still hackin")
 
-
     saveRunData(opt, (allLosses, allAccs, compRates, allHiddenSizes))
 
     visualize_loss_acc(opt, allLosses, allAccs, compRates)

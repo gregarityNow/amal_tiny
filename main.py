@@ -1,5 +1,5 @@
 
-from .src import train_ViT
+from src import train_ViT
 
 import argparse
 parser = argparse.ArgumentParser()
