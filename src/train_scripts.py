@@ -162,7 +162,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
             optimizer.step()
             if batchIndex % 10 == 0:
                 print("Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
-            accForEpoch["train"].append(total_loss / total_seen)
+            lossForEpoch["train"].append(total_loss / total_seen)
             accForEpoch["train"].append(total_correct / total_seen)
         print(f"[Epoch {i + 1:2d}] loss: {total_loss / total_seen:.2E} accuracy_train: {total_correct / total_seen:.2%}")
 
