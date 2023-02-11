@@ -204,8 +204,9 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
                 lossForEpoch["train"].append(total_loss / total_seen)
                 accForEpoch["train"].append(total_correct / total_seen)
                 print("Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
-            total_loss, total_correct, total_seen = 0.0, 0.0, 0
-        print(f"[Epoch {epoch + 1:2d}] loss: {total_loss / total_seen:.2E} accuracy_train: {total_correct / total_seen:.2%}")
+                total_loss, total_correct, total_seen = 0.0, 0.0, 0
+
+        print("Epoch loss",np.mean(lossForEpoch["train"]),"Epoch acc",np.mean(accForEpoch["train"]))
 
         accTest, lossTest = evaluate(model, test_loader)
         model.zero_grad();
@@ -245,11 +246,10 @@ def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):
             correct = (output.argmax(-1) == labels).sum().item()
             total_seen += len(output)
             total_correct += correct
-            if batchIndex % 10 == 0:
-                print("Test Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
             if total_seen >= 96:
                 lossByEpoch.append(total_loss / total_seen)
                 accByEpoch.append(total_correct / total_seen)
-            total_loss, total_correct, total_seen = 0.0, 0.0, 0
-        print("Test loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
+                total_loss, total_correct, total_seen = 0.0, 0.0, 0
+                print("Test Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
+        print("Test loss", np.mean(lossByEpoch), "accuracy", np.mean(accByEpoch))
     return accByEpoch, lossByEpoch
