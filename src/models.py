@@ -61,6 +61,7 @@ def initializeModel(opt,numClasses,compRate=1):
 
 	if not opt.doAdapt:
 		model = ViTForImageClassification.from_pretrained("google/vit-base-patch16-224")
+		model.classifier = nn.Linear(in_features=768, out_features=numClasses, bias=True)
 		model.init_weights();
 		return model
 
