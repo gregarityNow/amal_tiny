@@ -120,4 +120,4 @@ def shrinkModel(model, ro=0.75):
 	# return model
 	print("new hidden sizes", hid_sizes)
 
-	return newModel
+	return newModel, hid_sizes

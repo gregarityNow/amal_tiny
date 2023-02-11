@@ -1,10 +1,10 @@
-
+import pathlib
 from .basis_funcs import *;
 #, SwinForImageClassification
 import torch
-from datasets import load_dataset
+# from datasets import load_dataset
 
-
+from collections import OrderedDict
 
 
 from torchvision import datasets, transforms
@@ -37,7 +37,7 @@ def get_mnist_loaders(batch_size=128, quickie=-1):
 	train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, **kwargs)
 	test_loader = DataLoader(test_dataset, batch_size=batch_size, **kwargs)
 
-	return train_loader, test_loader
+	return train_loader, test_loader, 10
 
 def get_cifar10_loaders(batch_size=128, quickie=-1):
 
@@ -55,5 +55,55 @@ def get_cifar10_loaders(batch_size=128, quickie=-1):
 	train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, **kwargs)
 	test_loader = DataLoader(test_dataset, batch_size=batch_size, **kwargs)
 
-	return train_loader, test_loader
+	return train_loader, test_loader, 10
 
+
+
+def saveModel(model, opt, compRate = 1):
+	outDir = opt.outPath + "/models/"
+	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
+	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + opt.dsName + "_" + str(opt.hid_size)  + ".cpkt"
+
+	stateDict = model.state_dict()
+	paramsDict = OrderedDict({k: stateDict[k] for k in stateDict.keys() if "adapter" in k or "classifier" in k})
+	torch.save(paramsDict, outPath)
+
+	print("saved model to", outPath)
+
+
+def loadModel(model, opt, compRate=1):
+	outDir = opt.outPath + "/models/"
+	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + opt.dsName + "_" + str(opt.hid_size) + ".cpkt"
+
+	paramsDictLoaded = torch.load(outPath)
+	model.load_state_dict(paramsDictLoaded, strict=False)
+
+	print("loaded weights from",outPath)
+
+
+def saveRunData(opt, runData):
+	outDir = opt.outPath + "/runData/"
+	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
+	outPath = outDir + "/" + "adapter_" + opt.dsName + "_" + str(opt.hid_size) + ".pkl"
+	with open(outPath,"wb") as fp:
+		pickle.dump(runData, fp);
+
+	print("saved run data to",outPath)
+
+
+def loadRunData(opt):
+	outDir = opt.outPath + "/runData/"
+	outPath = outDir + "/" + "adapter_" + opt.dsName + "_" + str(opt.hid_size) + ".pkl"
+	with open(outPath,"rb") as fp:
+		runData = pickle.load(fp);
+
+	return runData
+
+
+def saveFig(opt, plotName):
+	outDir = opt.outPath + "/img/"
+	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
+	outPath = outDir + "/" + plotName + "_"  + opt.dsName + "_" + str(opt.hid_size) + ".png"
+
+	plt.savefig(outPath)
+	print("Saved fig to",outPath)

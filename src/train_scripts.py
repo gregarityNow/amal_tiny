@@ -1,33 +1,35 @@
 
 from .basis_funcs import *;
-from .load_data import get_mnist_loaders, get_cifar10_loaders
+from .viz import visualize_loss_acc
+from .load_data import *
 from .models import ViT_TINA
 from .tina_imp import shrinkModel
 
 
-import numpy as np
 
+momentum = 0.9
+weight_decay = 1e-4
 import time
-def train_ViT(model = None ,criterion = nn.CrossEntropyLoss() ,dsName = "mnist" ,quickie=-1,
-              batch_size=16 ,hid_size=50, n_epochs=20, lr = 0.01, momentum = 0.9,
-              weight_decay = 1e-4, ro = 0.25, comp_n_epochs = 20 ,targetCompRate = 16):
+def train_ViT(opt):
+
+    ro, lr = opt.ro, opt.lr
 
     allLosses = []
     allAccs = []
     torch.cuda.empty_cache()
-    if dsName == "mnist":
-        train_loader, test_loader = get_mnist_loaders(batch_size, quickie=quickie)
-    elif dsName == "cifar10":
-        train_loader, test_loader = get_cifar10_loaders(batch_size, quickie=quickie)
+    if opt.dsName == "mnist":
+        train_loader, test_loader, numClasses = get_mnist_loaders(opt.batch_size, quickie=opt.quickie)
+    elif opt.dsName == "cifar10":
+        train_loader, test_loader, numClasses = get_cifar10_loaders(opt.batch_size, quickie=opt.quickie)
     else:
-        raise Exception("Don't know dataset",dsName)
-    if model is None:
-        model = ViT_TINA(hid_size ,n_classes=10)
+        raise Exception("Don't know dataset",opt.dsName)
+    model = ViT_TINA(opt.hid_size ,n_classes=10)
 
+    allHiddenSizes = [model.hid_sizes]
 
-    model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader ,model,
-                                                  dsName = dsName ,n_epochs=n_epochs, lr = lr ,criterion=criterion,
-                                                  momentum = momentum, weight_decay=weight_decay)
+    model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr)
+
+    saveModel(model, opt);
 
     allLosses.append(lossByEpoch)
     allAccs.append(accByEpoch)
@@ -37,7 +39,8 @@ def train_ViT(model = None ,criterion = nn.CrossEntropyLoss() ,dsName = "mnist" 
     for compRound in range(10):
 
         shrinkTime = time.time()
-        newModel = shrinkModel(model, ro)
+        newModel, new_hidden_sizes = shrinkModel(model, ro)
+        allHiddenSizes.append(new_hidden_sizes)
         shrinkTime = time.time( ) -shrinkTime
         print("shrunk in" ,shrinkTime)
         currCompRate = 1/ np.power(ro, compRound + 1)
@@ -70,19 +73,25 @@ def train_ViT(model = None ,criterion = nn.CrossEntropyLoss() ,dsName = "mnist" 
                                   newModel.model.vit.encoder.layer[layerIndex].output.adapter.block[2].bias))
 
         model = newModel
-        model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader, model,
-                                                      dsName=dsName, n_epochs=comp_n_epochs, criterion=criterion,
-                                                      lr=lr, momentum=momentum, weight_decay=weight_decay, compRate=currCompRate)
+        model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.comp_n_epochs,
+                                                      lr=lr)
         allLosses.append(lossByEpoch)
         allAccs.append(accByEpoch)
 
-        if currCompRate >= targetCompRate:
+        saveModel(model, opt,compRate=int(currCompRate));
+
+        if currCompRate >= opt.targetCompRate:
             print("dunzo")
             break
         else:
-            print(currCompRate, targetCompRate, "still hackin")
+            print(currCompRate, opt.targetCompRate, "still hackin")
 
-    return allLosses, allAccs, compRates
+
+    saveRunData(opt, (allLosses, allAccs, compRates, allHiddenSizes))
+
+    visualize_loss_acc(opt, allLosses, allAccs, compRates)
+
+    return allLosses, allAccs, compRates, allHiddenSizes
 
 
 # from tqdm.notebook import tqdm
@@ -102,7 +111,7 @@ image_processor = AutoImageProcessor.from_pretrained("google/vit-base-patch16-22
 
 
 def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criterion=nn.CrossEntropyLoss(),
-                 momentum=0.9, weight_decay=1e-4, compRate=0, dsName="mnist"):
+                 momentum=0.9, weight_decay=1e-4):
     model = model.to(device)
     model.train()
     nonFrozenParams = getNonFrozenParams(model)
@@ -140,9 +149,6 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
         lossByEpoch["test"].append(lossTest)
         accByEpoch["test"].append(accTest)
 
-    outPath = "adapter_" + str(compRate) + "_" + dsName + ".cpkt"
-    torch.save(model.state_dict(), outPath)
-    print("saved model to", outPath)
 
     return model, accByEpoch, lossByEpoch
 

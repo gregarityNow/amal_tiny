@@ -66,7 +66,9 @@ class ViT_TINA(nn.Module):
 
 		if type(hid_sizes) == int:
 			hid_size = hid_sizes
-			hid_sizes = {"intermediate": [hid_size] * self.depth, "output": [hid_size] * self.depth}
+			self.hid_sizes = {"intermediate": [hid_size] * self.depth, "output": [hid_size] * self.depth}
+		else:
+			self.hid_sizes=hid_sizes
 
 		for layerIndex in range(self.depth):
 			# prevLayer_MSA = self.model.vit.encoder.layer[layerIndex].attention.attention
@@ -74,11 +76,11 @@ class ViT_TINA(nn.Module):
 
 			self.model.vit.encoder.layer[layerIndex].intermediate = AdapterLayer(self.model.vit.encoder.layer[layerIndex].intermediate,
 																				 in_size=self.model.vit.encoder.layer[layerIndex].intermediate.dense.out_features,
-																				 hid_size=hid_sizes["intermediate"][layerIndex])
+																				 hid_size=self.hid_sizes["intermediate"][layerIndex])
 
 			self.model.vit.encoder.layer[layerIndex].output = AdapterLayerOutput(self.model.vit.encoder.layer[layerIndex].output,
 																				 in_size=self.model.vit.encoder.layer[layerIndex].output.dense.out_features,
-																				 hid_size=hid_sizes["output"][layerIndex])
+																				 hid_size=self.hid_sizes["output"][layerIndex])
 
 		if doAdapt:
 			self.model.classifier = nn.Linear(in_features=768, out_features=n_classes, bias=True)

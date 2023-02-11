@@ -2,10 +2,11 @@
 from .basis_funcs import *
 
 import matplotlib.patches as patches
-import matplotlib.pyplot as plt
+
+from .load_data import saveFig
 
 
-def visualize_loss_acc(allLosses, allAccs, compRates):
+def visualize_loss_acc(opt, allLosses, allAccs, compRates):
 	fig, (accAx, lossAx) = plt.subplots(1, 2, dpi=400)
 
 	trainAcc, trainLoss, testAcc, testLoss = [], [], [], []
@@ -40,3 +41,5 @@ def visualize_loss_acc(allLosses, allAccs, compRates):
 		ax.set_xticks(xticks)
 		ax.set_xticklabels([str(int(x)) for x in compRates])
 		ax.set_xlabel(r"Compression rate $\sigma$")
+
+	saveFig(opt, "accLossThroughEpochs");
