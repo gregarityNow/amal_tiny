@@ -178,6 +178,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
     accByEpoch, lossByEpoch = {"train": [], "test": []}, {"train": [], "test": []}
 
     prevBestAcc = 0
+    didConverge = 0
 
     for epoch in range(n_epochs):
         total_loss, total_correct, total_seen = 0.0, 0.0, 0
@@ -215,6 +216,10 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
         accByEpoch["train"].extend(accForEpoch["train"])
 
         if converged(accForEpoch["train"], baseline, prevBestAcc):
+            didConverge += 1
+        else:
+            didConverge = 0
+        if didConverge > 1:
             break;
 
 
