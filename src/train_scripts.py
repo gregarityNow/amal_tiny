@@ -207,7 +207,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
         print("Epoch loss",np.mean(lossForEpoch["train"]),"Epoch acc",np.mean(accForEpoch["train"]))
 
-        accTest, lossTest = evaluate(model, test_loader)
+        accTest, lossTest = evaluate(model, test_loader,doAdapt=doAdapt)
         model.zero_grad();
         lossByEpoch["test"].extend(lossTest)
         accByEpoch["test"].extend(accTest)
