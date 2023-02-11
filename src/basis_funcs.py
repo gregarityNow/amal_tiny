@@ -11,7 +11,3 @@ print("device is",device);
 
 import pickle
 
-def saveRunDat(data):
-	with open(outPath,"wb") as fp:
-		pickle.dump(data,outPath)
-	print("dumped to",outPath)

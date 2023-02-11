@@ -93,6 +93,8 @@ def loadModel(model, opt, compRate=1):
 
 	print("loaded weights from",outPath)
 
+import pickle
+
 
 def saveRunData(opt, runData):
 	outDir = opt.outPath + "/runData/"
