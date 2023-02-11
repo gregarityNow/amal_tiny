@@ -22,7 +22,7 @@ def train_ViT_vanilla(opt):
 
     model = initializeModel(opt, numClasses);
 
-    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.n_epochs, lr=lr)
+    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.n_epochs, lr=lr,doAdapt=0)
 
     saveModel(model, opt);
 
