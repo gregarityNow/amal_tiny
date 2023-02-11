@@ -28,12 +28,12 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 		compressionSizeLen = epochLengths[compRateIndex]
 
 		for axIndex, ax in enumerate([accAx, lossAx]):
-			rect = patches.Rectangle((xPrev, 0), compressionSizeLen, 1 if axIndex == 0 else maxLoss, alpha=0.4,
+			rect = patches.Rectangle((xPrev, 0), compressionSizeLen, 1.2 if axIndex == 0 else maxLoss*1.2, alpha=0.4,
 									 facecolor=("blue" if compRateIndex % 2 == 0 else "orange"))
 			ax.add_patch(rect)
 
 			if compRates is not None:
-				ax.text(xPrev + compressionSizeLen / 2-0.4, 0.1 if axIndex == 0 else maxLoss*0.9, s = r"$\sigma=$"+str(compRates[compRateIndex]))
+				ax.text(xPrev + compressionSizeLen / 2.2,(1.1 if axIndex == 0 else maxLoss*1.1), s = r"$\sigma=$"+str(compRates[compRateIndex]))
 
 		xPrev += compressionSizeLen
 		trainAcc.extend(allAccs[compRateIndex]["train"])
@@ -53,7 +53,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 	accAx.set_title("Accuracy")
 	for ax in [accAx, lossAx]:
 		ax.set_xticks(np.arange(xPrev));
-		ax.set_xticklabels(np.arange(xPrev))
+		ax.set_xticklabels([str(x) if x % 10 == 0 else "" for x in np.arange(xPrev)])
 		ax.set_xlabel("Epoch")
 
 	fig.tight_layout()
