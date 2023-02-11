@@ -43,10 +43,10 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 
 	smidge = 0.5 / len(allAccs[0]["train"])
 
-	lossAx.plot(smidge + np.arange(len(trainLoss)) / xPrev, trainLoss, label="Train")
-	lossAx.plot(smidge + np.arange(len(testLoss)) / xPrev, testLoss, label="Test")
-	accAx.plot(smidge + np.arange(len(trainAcc)) / xPrev, trainAcc, label="Train")
-	accAx.plot(smidge + np.arange(len(testAcc)) / xPrev, testAcc, label="Test")
+	lossAx.plot(smidge + np.arange(len(trainLoss)) * xPrev / len(trainLoss), trainLoss, label="Train")
+	lossAx.plot(smidge + np.arange(len(testLoss)) * xPrev / len(testLoss), testLoss, label="Test")
+	accAx.plot(smidge + np.arange(len(trainAcc)) * xPrev / len(trainAcc), trainAcc, label="Train")
+	accAx.plot(smidge + np.arange(len(testAcc)) * xPrev / len(testAcc), testAcc, label="Test")
 	accAx.legend()
 	lossAx.legend()
 	lossAx.set_title("Loss")
