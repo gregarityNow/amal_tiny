@@ -23,7 +23,10 @@ opt = parser.parse_args()
 for dsName in opt.dsName.split(" "):
 	opt.dsName = dsName
 	if opt.runType == "train":
-		train_ViT(opt)
+		if opt.doAdapt:
+			train_ViT(opt)
+		else:
+			train_ViT_vanilla(opt)
 	elif opt.runType == "viz":
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates)

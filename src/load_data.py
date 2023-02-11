@@ -115,7 +115,7 @@ def loadRunData(opt):
 	return runData
 
 def getOutNameForOpt(opt):
-	return opt.dsName + "_" + str(opt.hid_size) +"_"+ str(opt.ro) + ("_quickie" if opt.quickie > 0 else "");
+	return opt.dsName + "_" + str(opt.hid_size) +"_"+ str(opt.ro) + ("_quickie" if opt.quickie > 0 else "") + ("_vanilla" if opt.doAdapt == 0 else "");
 
 def saveFig(opt, plotName):
 	outDir = opt.outPath + "/img/"

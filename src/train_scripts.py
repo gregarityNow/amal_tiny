@@ -22,10 +22,7 @@ def train_ViT_vanilla(opt):
 
     model = initializeModel(opt, numClasses);
 
-
     model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.n_epochs, lr=lr)
-    baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"]) * 0.99):])
-    print("Established baseline", baselineAcc)
 
     saveModel(model, opt);
 
@@ -188,7 +185,6 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
             images = image_processor([images[i] for i in range(len(images))], return_tensors="pt")
             images = images.to(device)
-            # print("james",images.keys())
 
             optimizer.zero_grad()
             model.zero_grad()
