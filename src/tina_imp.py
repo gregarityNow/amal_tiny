@@ -30,9 +30,9 @@ def rank_hidden_values(model):
 				scores.append(d)
 			# raise Exception("nose")
 	scores.sort(key=lambda x: x["score"])
-	print("how ya like them apples")
-	for x in scores:
-		print(x["block"], x["score"])
+	# print("how ya like them apples")
+	# for x in scores:
+	# 	print(x["block"], x["score"])
 	return scores
 
 
