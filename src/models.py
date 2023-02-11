@@ -61,6 +61,7 @@ def initializeModel(opt,numClasses,compRate=1):
 	model = ViT_TINA(opt.hid_size, n_classes=numClasses)
 	if opt.fromBaseline:
 		loadModel(model, opt, compRate=compRate)
+	return model
 
 class ViT_TINA(nn.Module):
 	def __init__(self, hid_sizes, n_classes):
