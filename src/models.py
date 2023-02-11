@@ -58,6 +58,12 @@ class AdapterLayerOutput(AdapterLayer):
 		return prev_out
 
 def initializeModel(opt,numClasses,compRate=1):
+
+	if not opt.doAdapt:
+		model = ViTForImageClassification.from_pretrained("google/vit-base-patch16-224")
+		model.init_weights();
+		return model
+
 	model = ViT_TINA(opt.hid_size, n_classes=numClasses)
 	if opt.fromBaseline:
 		loadModel(model, opt, compRate=compRate)

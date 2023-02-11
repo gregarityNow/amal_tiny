@@ -1,0 +1,4 @@
+
+1: MNIST, CIFAR, 20 epochs per (barring convergence), starting at 50, ro=0.25,0.5,0.75
+2: MNIST, CIFAR, 100 epochs, starting at {1,2}
+3: MNIST, CIFAR, 100 epochs, full model tuning

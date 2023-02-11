@@ -6,6 +6,36 @@ from .models import ViT_TINA, initializeModel
 from .tina_imp import shrinkModel
 
 
+def train_ViT_vanilla(opt):
+    ro, lr = opt.ro, opt.lr
+
+    allLosses = []
+    allAccs = []
+    epochLengths = []
+    torch.cuda.empty_cache()
+    if opt.dsName == "mnist":
+        train_loader, test_loader, numClasses = get_mnist_loaders(opt.batch_size, quickie=opt.quickie)
+    elif opt.dsName == "cifar10":
+        train_loader, test_loader, numClasses = get_cifar10_loaders(opt.batch_size, quickie=opt.quickie)
+    else:
+        raise Exception("Don't know dataset", opt.dsName)
+
+    model = initializeModel(opt, numClasses);
+
+
+    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.n_epochs, lr=lr)
+    baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"]) * 0.99):])
+    print("Established baseline", baselineAcc)
+
+    saveModel(model, opt);
+
+    allLosses.append(lossByEpoch)
+    allAccs.append(accByEpoch)
+    epochLengths.append(numEpochs)
+
+    saveRunData(opt, (allLosses, allAccs))
+
+    visualize_loss_acc(opt, allLosses, allAccs,epochLengths,compRates = None)
 
 momentum = 0.9
 weight_decay = 1e-4
@@ -16,6 +46,7 @@ def train_ViT(opt):
 
     allLosses = []
     allAccs = []
+    epochLengths = []
     torch.cuda.empty_cache()
     if opt.dsName == "mnist":
         train_loader, test_loader, numClasses = get_mnist_loaders(opt.batch_size, quickie=opt.quickie)
@@ -26,10 +57,9 @@ def train_ViT(opt):
 
     model = initializeModel(opt, numClasses);
 
-
     allHiddenSizes = [model.hid_sizes]
 
-    model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr)
+    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr)
     baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
     print("Established baseline",baselineAcc)
 
@@ -37,6 +67,7 @@ def train_ViT(opt):
 
     allLosses.append(lossByEpoch)
     allAccs.append(accByEpoch)
+    epochLengths.append(numEpochs)
 
     compRates = [1]
 
@@ -77,10 +108,11 @@ def train_ViT(opt):
                                   newModel.model.vit.encoder.layer[layerIndex].output.adapter.block[2].bias))
 
         model = newModel
-        model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.comp_n_epochs,
+        model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.comp_n_epochs,
                                                       baseline=baselineAcc,lr=lr)
         allLosses.append(lossByEpoch)
         allAccs.append(accByEpoch)
+        epochLengths.append(numEpochs)
 
         saveModel(model, opt,compRate=int(currCompRate));
 
@@ -100,7 +132,9 @@ def train_ViT(opt):
 # from tqdm.notebook import tqdm
 
 
-def getNonFrozenParams(model):
+def getNonFrozenParams(model, fullTrain = False):
+    if fullTrain:
+        return model.parameters();
     params = [x[1] for x in model.named_parameters() if "adapter" in x[0] or "classifier" in x[0]]
     print("non-frozen",len(params),len(list(model.parameters())))
     return params
@@ -145,7 +179,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
     prevBestAcc = 0
 
-    for i in range(n_epochs):
+    for epoch in range(n_epochs):
         total_loss, total_correct, total_seen = 0.0, 0.0, 0
         accForEpoch, lossForEpoch = {"train": [], "test": []}, {"train": [], "test": []}
         for batchIndex, (images, labels) in tqdm(enumerate(train_loader)):
@@ -169,7 +203,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
                 print("Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
             lossForEpoch["train"].append(total_loss / total_seen)
             accForEpoch["train"].append(total_correct / total_seen)
-        print(f"[Epoch {i + 1:2d}] loss: {total_loss / total_seen:.2E} accuracy_train: {total_correct / total_seen:.2%}")
+        print(f"[Epoch {epoch + 1:2d}] loss: {total_loss / total_seen:.2E} accuracy_train: {total_correct / total_seen:.2%}")
 
 
         accTest, lossTest = evaluate(model, test_loader)
@@ -185,7 +219,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
 
 
-    return model, accByEpoch, lossByEpoch
+    return model, accByEpoch, lossByEpoch, epoch
 
 
 def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):

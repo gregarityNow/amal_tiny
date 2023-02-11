@@ -23,9 +23,7 @@ for dsName in opt.dsName.split(" "):
 	if opt.runType == "train":
 		train_ViT(opt)
 	elif opt.runType == "viz":
-		allLosses, allAccs, compRates, allHiddenSizes = loadRunData(opt)
-		visualize_loss_acc(opt, allLosses, allAccs, compRates)
-
-
+		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
+		visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates)
 
 

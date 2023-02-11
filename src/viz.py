@@ -6,23 +6,26 @@ import matplotlib.patches as patches
 from .load_data import saveFig
 
 
-def visualize_loss_acc(opt, allLosses, allAccs, compRates):
-	fig, (accAx, lossAx) = plt.subplots(1, 2, dpi=400)
+def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
+	fig, (accAx, lossAx) = plt.subplots(2,1, dpi=400)
 
 	trainAcc, trainLoss, testAcc, testLoss = [], [], [], []
 	xPrev = 0
 
-	xticks = []
 	for compRateIndex, accs in enumerate(allAccs):
 
-		epochLen = len(allAccs[compRateIndex]["train"]) / len(allAccs[0]["train"])
-		xticks.append(xPrev + epochLen / 2)
+		compressionSizeLen = epochLengths[compRateIndex]
 
-		for ax in [accAx, lossAx]:
-			rect = patches.Rectangle((xPrev, 0), epochLen, 1, alpha=0.4,
+		for axIndex, ax in enumerate([accAx, lossAx]):
+			rect = patches.Rectangle((xPrev, 0), compressionSizeLen, 1, alpha=0.4,
 									 facecolor=("blue" if compRateIndex % 2 == 0 else "orange"))
 			ax.add_patch(rect)
-		xPrev += epochLen
+
+			if compRates is not None:
+				ax.text(xPrev + compressionSizeLen / 2, 0.1 if axIndex == 0 else 0.9, s = r"$\sigma=$"+str(compRates[compRateIndex]))
+
+
+		xPrev += compressionSizeLen
 		trainAcc.extend(allAccs[compRateIndex]["train"])
 		trainLoss.extend(allLosses[compRateIndex]["train"])
 		testAcc.extend(allAccs[compRateIndex]["test"])
@@ -39,8 +42,8 @@ def visualize_loss_acc(opt, allLosses, allAccs, compRates):
 	lossAx.set_title("Loss")
 	accAx.set_title("Accuracy")
 	for ax in [accAx, lossAx]:
-		ax.set_xticks(xticks)
-		ax.set_xticklabels([str(int(x)) for x in compRates])
-		ax.set_xlabel(r"Compression rate $\sigma$")
+		ax.set_xticks(np.arange(xPrev));
+		ax.set_xticklabels(np.arange(xPrev))
+		ax.set_xlabel("Epoch")
 
 	saveFig(opt, "accLossThroughEpochs");
