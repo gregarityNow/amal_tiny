@@ -2,7 +2,7 @@
 from .basis_funcs import *;
 from .viz import visualize_loss_acc
 from .load_data import *
-from .models import ViT_TINA
+from .models import ViT_TINA, initializeModel
 from .tina_imp import shrinkModel
 
 
@@ -23,7 +23,9 @@ def train_ViT(opt):
         train_loader, test_loader, numClasses = get_cifar10_loaders(opt.batch_size, quickie=opt.quickie)
     else:
         raise Exception("Don't know dataset",opt.dsName)
-    model = ViT_TINA(opt.hid_size ,n_classes=10)
+
+    model = initializeModel(opt, numClasses);
+
 
     allHiddenSizes = [model.hid_sizes]
 

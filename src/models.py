@@ -3,6 +3,7 @@
 from transformers import ViTForImageClassification
 
 from .basis_funcs import *;
+from .load_data import loadModel
 
 class AdapterBlock(nn.Module):
 	'''
@@ -56,6 +57,10 @@ class AdapterLayerOutput(AdapterLayer):
 			prev_out = self.adapter(prev_out)
 		return prev_out
 
+def initializeModel(opt,numClasses,compRate=1):
+	model = ViT_TINA(opt.hid_size, n_classes=numClasses)
+	if opt.fromBaseline:
+		loadModel(model, opt, compRate=compRate)
 
 class ViT_TINA(nn.Module):
 	def __init__(self, hid_sizes, n_classes):
