@@ -219,7 +219,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
 
 
-    return model, accByEpoch, lossByEpoch, epoch
+    return model, accByEpoch, lossByEpoch, epoch+1
 
 
 def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):
