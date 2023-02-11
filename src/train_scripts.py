@@ -28,6 +28,7 @@ def train_ViT(opt):
     allHiddenSizes = [model.hid_sizes]
 
     model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr)
+    baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
 
     saveModel(model, opt);
 
@@ -74,7 +75,7 @@ def train_ViT(opt):
 
         model = newModel
         model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.comp_n_epochs,
-                                                      lr=lr)
+                                                      baseline=baselineAcc,lr=lr)
         allLosses.append(lossByEpoch)
         allAccs.append(accByEpoch)
 
@@ -107,20 +108,38 @@ image_processor = AutoImageProcessor.from_pretrained("google/vit-base-patch16-22
 
 
 
+def converged(accs, baseline):
+    halfWay = np.mean(accs[int(len(accs)*0.48):int(len(accs)*0.52)])
+    final = np.mean(accs[int(len(accs)*0.98):])
+    print("testing convergence for halfway",halfWay,"final",final,"baseline",baseline);
+    if halfWay > final:
+        print("decreasing accuracy convergence")
+        return True
+    if (final-halfWay)/final < 0.02:
+        print("final/halfway convergence")
+        return True
+    if (baseline-final)/baseline < 0.03:
+        print("final/baseline convergence")
+        return True
+    print("No convergence")
+    return False
+
+
 
 
 def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criterion=nn.CrossEntropyLoss(),
-                 momentum=0.9, weight_decay=1e-4):
+                 momentum=0.9, weight_decay=1e-4, baseline = 1):
     model = model.to(device)
     model.train()
     nonFrozenParams = getNonFrozenParams(model)
     optimizer = torch.optim.SGD(nonFrozenParams, lr=lr, momentum=momentum, weight_decay=weight_decay)
 
-    lossByEpoch = {"train": [], "test": []}
-    accByEpoch = {"train": [], "test": []}
+
+    accByEpoch, lossByEpoch = {"train": [], "test": []}, {"train": [], "test": []}
 
     for i in range(n_epochs):
         total_loss, total_correct, total_seen = 0.0, 0.0, 0
+        accForEpoch, lossForEpoch = {"train": [], "test": []}, {"train": [], "test": []}
         for batchIndex, (images, labels) in tqdm(enumerate(train_loader)):
             labels = labels.to(device)
 
@@ -140,14 +159,22 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
             optimizer.step()
             if batchIndex % 10 == 0:
                 print("Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
-            lossByEpoch["train"].append(total_loss / total_seen)
-            accByEpoch["train"].append(total_correct / total_seen)
+            accForEpoch["train"].append(total_loss / total_seen)
+            accForEpoch["train"].append(total_correct / total_seen)
         print(f"[Epoch {i + 1:2d}] loss: {total_loss / total_seen:.2E} accuracy_train: {total_correct / total_seen:.2%}")
 
 
         accTest, lossTest = evaluate(model, test_loader)
+        model.zero_grad();
         lossByEpoch["test"].extend(lossTest)
         accByEpoch["test"].extend(accTest)
+
+        lossByEpoch["train"].extend(lossForEpoch["train"])
+        accByEpoch["train"].extend(accForEpoch["train"])
+
+        if converged(accForEpoch["train"], baseline):
+            break;
+
 
 
     return model, accByEpoch, lossByEpoch
@@ -156,25 +183,26 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):
     model.eval()
 
-    total_loss, total_correct, total_seen = 0.0, 0.0, 0
-    lossByEpoch, accByEpoch = [],[]
+    with torch.no_grad():
+        total_loss, total_correct, total_seen = 0.0, 0.0, 0
+        lossByEpoch, accByEpoch = [],[]
 
-    for batchIndex, (images, labels) in tqdm(enumerate(test_loader)):
-        labels = labels.to(device)
-        # print(labels)
+        for batchIndex, (images, labels) in tqdm(enumerate(test_loader)):
+            labels = labels.to(device)
+            # print(labels)
 
-        images = image_processor([images[i] for i in range(len(images))], return_tensors="pt")
-        images = images.to(device)
+            images = image_processor([images[i] for i in range(len(images))], return_tensors="pt")
+            images = images.to(device)
 
-        output = model(images).logits
-        loss = criterion(output, labels)
-        total_loss += loss.item()
-        correct = (output.argmax(-1) == labels).sum().item()
-        total_seen += len(output)
-        total_correct += correct
-        if batchIndex % 10 == 0:
-            print("Test Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
-        lossByEpoch.append(total_loss / total_seen)
-        accByEpoch.append(total_correct / total_seen)
-    print("Test loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
+            output = model(images).logits
+            loss = criterion(output, labels)
+            total_loss += loss.item()
+            correct = (output.argmax(-1) == labels).sum().item()
+            total_seen += len(output)
+            total_correct += correct
+            if batchIndex % 10 == 0:
+                print("Test Batch", batchIndex, "loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
+            lossByEpoch.append(total_loss / total_seen)
+            accByEpoch.append(total_correct / total_seen)
+        print("Test loss", total_loss / total_seen, "accuracy", total_correct / total_seen)
     return accByEpoch, lossByEpoch

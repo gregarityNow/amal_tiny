@@ -62,7 +62,7 @@ def get_cifar10_loaders(batch_size=128, quickie=-1):
 def saveModel(model, opt, compRate = 1):
 	outDir = opt.outPath + "/models/"
 	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
-	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + opt.dsName + "_" + str(opt.hid_size)  + ".cpkt"
+	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + getOutNameForOpt(opt)  + ".cpkt"
 
 	stateDict = model.state_dict()
 	paramsDict = OrderedDict({k: stateDict[k] for k in stateDict.keys() if "adapter" in k or "classifier" in k})
@@ -73,7 +73,7 @@ def saveModel(model, opt, compRate = 1):
 
 def loadModel(model, opt, compRate=1):
 	outDir = opt.outPath + "/models/"
-	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + opt.dsName + "_" + str(opt.hid_size) + ".cpkt"
+	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + getOutNameForOpt(opt) + ".cpkt"
 
 	paramsDictLoaded = torch.load(outPath)
 	model.load_state_dict(paramsDictLoaded, strict=False)
@@ -84,7 +84,7 @@ def loadModel(model, opt, compRate=1):
 def saveRunData(opt, runData):
 	outDir = opt.outPath + "/runData/"
 	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
-	outPath = outDir + "/" + "adapter_" + opt.dsName + "_" + str(opt.hid_size) + ".pkl"
+	outPath = outDir + "/" + "adapter_" + getOutNameForOpt(opt) + ".pkl"
 	with open(outPath,"wb") as fp:
 		pickle.dump(runData, fp);
 
@@ -93,17 +93,19 @@ def saveRunData(opt, runData):
 
 def loadRunData(opt):
 	outDir = opt.outPath + "/runData/"
-	outPath = outDir + "/" + "adapter_" + opt.dsName + "_" + str(opt.hid_size) + ".pkl"
+	outPath = outDir + "/" + "adapter_" + getOutNameForOpt(opt) + ".pkl"
 	with open(outPath,"rb") as fp:
 		runData = pickle.load(fp);
 
 	return runData
 
+def getOutNameForOpt(opt):
+	return opt.dsName + "_" + str(opt.hid_size) + ("_quickie" if opt.quickie > 0 else "");
 
 def saveFig(opt, plotName):
 	outDir = opt.outPath + "/img/"
 	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
-	outPath = outDir + "/" + plotName + "_"  + opt.dsName + "_" + str(opt.hid_size) + ".png"
+	outPath = outDir + "/" + plotName + "_" + getOutNameForOpt(opt) + ".png"
 
 	plt.savefig(outPath)
 	print("Saved fig to",outPath)
