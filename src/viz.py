@@ -28,7 +28,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, compRates):
 		testAcc.extend(allAccs[compRateIndex]["test"])
 		testLoss.extend(allLosses[compRateIndex]["test"])
 
-	smidge = 0.5 / len(allAccs[0])
+	smidge = 0.5 / len(allAccs[0]["train"])
 
 	lossAx.plot(smidge + np.arange(len(trainLoss)) / len(allAccs[0]["train"]), trainLoss, label="Train")
 	lossAx.plot(smidge + np.arange(len(testLoss)) / len(allAccs[0]["test"]), testLoss, label="Test")
