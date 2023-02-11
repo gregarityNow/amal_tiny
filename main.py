@@ -15,6 +15,7 @@ parser.add_argument("-dsName",type=str,default="mnist cifar10");
 parser.add_argument("-outPath",type=str,default="./../out/");
 parser.add_argument("-runType",type=str,default="train");
 parser.add_argument("-fromBaseline",type=int,default=0);
+parser.add_argument("-doAdapt",type=int,default=1);
 
 opt = parser.parse_args()
 
