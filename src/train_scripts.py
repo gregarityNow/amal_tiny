@@ -111,12 +111,15 @@ image_processor = AutoImageProcessor.from_pretrained("google/vit-base-patch16-22
 
 
 
-def converged(accs, baseline):
+def converged(accs, baseline, prevBestAcc):
     halfWay = np.mean(accs[int(len(accs)*0.48):int(len(accs)*0.52)])
     final = np.mean(accs[int(len(accs)*0.98):])
     print("testing convergence for halfway",halfWay,"final",final,"baseline",baseline);
     if halfWay > final:
         print("decreasing accuracy convergence")
+        return True
+    if prevBestAcc > final:
+        print("convergence due to previous epoch's best being higher")
         return True
     if (final-halfWay)/final < 0.02:
         print("final/halfway convergence")
@@ -139,6 +142,8 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
 
     accByEpoch, lossByEpoch = {"train": [], "test": []}, {"train": [], "test": []}
+
+    prevBestAcc = 0
 
     for i in range(n_epochs):
         total_loss, total_correct, total_seen = 0.0, 0.0, 0
@@ -175,7 +180,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
         lossByEpoch["train"].extend(lossForEpoch["train"])
         accByEpoch["train"].extend(accForEpoch["train"])
 
-        if converged(accForEpoch["train"], baseline):
+        if converged(accForEpoch["train"], baseline, prevBestAcc):
             break;
 
 
