@@ -29,6 +29,7 @@ def train_ViT(opt):
 
     model, accByEpoch, lossByEpoch = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr)
     baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
+    print("Established baseline",baselineAcc)
 
     saveModel(model, opt);
 
