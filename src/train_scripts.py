@@ -225,7 +225,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
     return model, accByEpoch, lossByEpoch, epoch+1
 
 
-def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):
+def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss(), doAdapt = True):
     model.eval()
 
     with torch.no_grad():
@@ -239,7 +239,10 @@ def evaluate(model, test_loader, criterion=nn.CrossEntropyLoss()):
             images = image_processor([images[i] for i in range(len(images))], return_tensors="pt")
             images = images.to(device)
 
-            output = model(images).logits
+            if doAdapt:
+                output = model(images).logits
+            else:
+                output = model(**images).logits
             loss = criterion(output, labels)
             total_loss += loss.item()
             correct = (output.argmax(-1) == labels).sum().item()
