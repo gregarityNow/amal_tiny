@@ -10,19 +10,19 @@ from .tina_imp import shrinkModel
 momentum = 0.9
 weight_decay = 1e-4
 import time
-def train_ViT(opt):
+def train_ViT(opt, dsName):
 
     ro, lr = opt.ro, opt.lr
 
     allLosses = []
     allAccs = []
     torch.cuda.empty_cache()
-    if opt.dsName == "mnist":
+    if dsName == "mnist":
         train_loader, test_loader, numClasses = get_mnist_loaders(opt.batch_size, quickie=opt.quickie)
-    elif opt.dsName == "cifar10":
+    elif dsName == "cifar10":
         train_loader, test_loader, numClasses = get_cifar10_loaders(opt.batch_size, quickie=opt.quickie)
     else:
-        raise Exception("Don't know dataset",opt.dsName)
+        raise Exception("Don't know dataset",dsName)
     model = ViT_TINA(opt.hid_size ,n_classes=10)
 
     allHiddenSizes = [model.hid_sizes]

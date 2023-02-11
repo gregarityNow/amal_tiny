@@ -1,5 +1,5 @@
 
-from src import train_ViT
+from src import *
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -13,12 +13,18 @@ parser.add_argument("-comp_n_epochs",type=int,default=50);
 parser.add_argument("-n_epochs",type=int,default=50);
 parser.add_argument("-dsName",type=str,default="mnist");
 parser.add_argument("-outPath",type=str,default="./../out/");
+parser.add_argument("-runType",type=str,default="train");
 
 opt = parser.parse_args()
 
-train_ViT(opt)
+if opt.runType == "train":
+	for dsName in opt.dsName.split(" "):
+		train_ViT(opt, dsName)
 
-opt.dsName = "cifar10"
-train_ViT(opt)
+elif opt.runType == "viz":
+	allLosses, allAccs, compRates, allHiddenSizes = loadRunData(opt)
+	visualize_loss_acc(opt, allLosses, allAccs, compRates)
+
+
 
 
