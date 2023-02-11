@@ -16,6 +16,9 @@ parser.add_argument("-outPath",type=str,default="./../out/");
 
 opt = parser.parse_args()
 
-allLosses, allAccs, compRates, allHiddenSizes = train_ViT(opt)
+train_ViT(opt)
+
+opt.dsName = "cifar10"
+train_ViT(opt)
 
 
