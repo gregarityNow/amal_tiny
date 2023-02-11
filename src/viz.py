@@ -15,7 +15,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, compRates):
 	xticks = []
 	for compRateIndex, accs in enumerate(allAccs):
 
-		epochLen = len(allAccs[compRateIndex]["train"]) / len(allAccs[0])
+		epochLen = len(allAccs[compRateIndex]["train"]) / len(allAccs[0]["train"])
 		xticks.append(xPrev + epochLen / 2)
 
 		for ax in [accAx, lossAx]:
@@ -29,6 +29,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, compRates):
 		testLoss.extend(allLosses[compRateIndex]["test"])
 
 	smidge = 0.5 / len(allAccs[0])
+
 	lossAx.plot(smidge + np.arange(len(trainLoss)) / len(allAccs[0]["train"]), trainLoss, label="Train")
 	lossAx.plot(smidge + np.arange(len(testLoss)) / len(allAccs[0]["test"]), testLoss, label="Test")
 	accAx.plot(smidge + np.arange(len(trainAcc)) / len(allAccs[0]["train"]), trainAcc, label="Train")
