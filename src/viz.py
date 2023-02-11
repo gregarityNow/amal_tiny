@@ -33,7 +33,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 			ax.add_patch(rect)
 
 			if compRates is not None:
-				ax.text(xPrev + compressionSizeLen / 2, 0.1 if axIndex == 0 else maxLoss*0.9, s = r"$\sigma=$"+str(compRates[compRateIndex]))
+				ax.text(xPrev + compressionSizeLen / 2-0.4, 0.1 if axIndex == 0 else maxLoss*0.9, s = r"$\sigma=$"+str(compRates[compRateIndex]))
 
 		xPrev += compressionSizeLen
 		trainAcc.extend(allAccs[compRateIndex]["train"])
@@ -55,5 +55,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 		ax.set_xticks(np.arange(xPrev));
 		ax.set_xticklabels(np.arange(xPrev))
 		ax.set_xlabel("Epoch")
+
+	fig.tight_layout()
 
 	saveFig(opt, "accLossThroughEpochs");
