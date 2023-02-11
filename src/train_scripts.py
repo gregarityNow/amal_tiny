@@ -14,9 +14,9 @@ def train_ViT_vanilla(opt):
     epochLengths = []
     torch.cuda.empty_cache()
     if opt.dsName == "mnist":
-        train_loader, test_loader, numClasses = get_mnist_loaders(opt.batch_size, quickie=opt.quickie)
+        train_loader, test_loader, numClasses = get_mnist_loaders(opt);
     elif opt.dsName == "cifar10":
-        train_loader, test_loader, numClasses = get_cifar10_loaders(opt.batch_size, quickie=opt.quickie)
+        train_loader, test_loader, numClasses = get_cifar10_loaders(opt);
     else:
         raise Exception("Don't know dataset", opt.dsName)
 
