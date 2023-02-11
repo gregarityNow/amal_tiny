@@ -165,7 +165,7 @@ def converged(accs, baseline, prevBestAcc):
 
 
 def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criterion=nn.CrossEntropyLoss(),
-                 momentum=0.9, weight_decay=1e-4, baseline = 1):
+                 momentum=0.9, weight_decay=1e-4, baseline = 1, doAdapt = 1):
     model = model.to(device)
     model.train()
     nonFrozenParams = getNonFrozenParams(model)
@@ -188,7 +188,10 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
 
             optimizer.zero_grad()
             model.zero_grad()
-            output = model(images).logits
+            if doAdapt:
+                output = model(images).logits
+            else:
+                output = model(**images).logits
             loss = criterion(output, labels)
             total_loss += loss.item()
             correct = (output.argmax(-1) == labels).sum().item()
