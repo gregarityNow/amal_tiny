@@ -17,4 +17,11 @@ abacus: MNIST CIFAR10 on 50, ro=0.5
 21: MNIST, 100 epochs, starting at {1,2}
 22: MNIST, 100 epochs, vanilla
 23: CIFAR, 100 epochs, vanilla
+24: CIFAR10 MNIST on 50, ro=0.5 (lr thang)
 
+
+Changement de score:
+• Aléatoire
+• Other norms (norm 2, inf?)
+• Max entropy
+• Gradient norm?
