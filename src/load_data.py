@@ -65,7 +65,7 @@ def get_cifar_loaders(opt):
 		test_dataset = datasets.CIFAR100(root, train=False, download=True, transform=transform)
 	else:
 		print("loading cifar10!")
-		numClasses = 100
+		numClasses = 10
 		train_dataset = datasets.CIFAR10(root, train=True, download=True, transform=transform)
 		test_dataset = datasets.CIFAR10(root, train=False, download=True, transform=transform)
 
