@@ -23,7 +23,7 @@ def train_ViT_vanilla(opt):
     model = initializeModel(opt, numClasses);
 
     model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.n_epochs,
-                                                             lr=lr,doAdapt=0,stopEarly=not (opt.startSmall or not opt.doAdapt))
+                                                             lr=lr,doAdapt=0,stopEarly=opt.stopEarly)
 
     saveModel(model, opt);
 
@@ -57,7 +57,7 @@ def train_ViT(opt):
 
     allHiddenSizes = [model.hid_sizes]
 
-    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=not (opt.startSmall or not opt.doAdapt))
+    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=opt.stopEarly)
     baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
     print("Established baseline",baselineAcc)
 
@@ -107,7 +107,7 @@ def train_ViT(opt):
 
         model = newModel
         model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader, model, n_epochs=opt.comp_n_epochs,
-                                                      baseline=baselineAcc,lr=lr)
+                                                      baseline=baselineAcc,lr=lr, stopEarly=opt.stopEarly)
         allLosses.append(lossByEpoch)
         allAccs.append(accByEpoch)
         epochLengths.append(numEpochs)
@@ -147,6 +147,9 @@ def converged(accs, baseline, prevBestAcc):
     halfWay = np.mean(accs[int(len(accs)*0.48):int(len(accs)*0.52)])
     final = np.mean(accs[int(len(accs)*0.98):])
     print("testing convergence for halfway",halfWay,"final",final,"baseline",baseline);
+    if (baseline-final)/baseline < 0.035:
+        print("final/baseline convergence")
+        return "baseline"
     if halfWay > final:
         print("decreasing accuracy convergence")
         return "growStop"
@@ -156,9 +159,6 @@ def converged(accs, baseline, prevBestAcc):
     if (final-halfWay)/final < 0.02:
         print("final/halfway convergence")
         return "growStop"
-    if (baseline-final)/baseline < 0.04:
-        print("final/baseline convergence")
-        return "baseline"
     print("No convergence")
     return False
 
@@ -166,7 +166,7 @@ def converged(accs, baseline, prevBestAcc):
 
 
 def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criterion=nn.CrossEntropyLoss(),
-                 momentum=0.9, weight_decay=1e-4, baseline = 1, doAdapt = 1, stopEarly = True):
+                 momentum=0.9, weight_decay=1e-4, baseline = 1, doAdapt = 1, stopEarly = 10):
     model = model.to(device)
     model.train()
     nonFrozenParams = getNonFrozenParams(model, fullTrain=1-doAdapt)
@@ -219,15 +219,14 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
         lossByEpoch["train"].extend(lossForEpoch["train"])
         accByEpoch["train"].extend(accForEpoch["train"])
 
-        if stopEarly:
-            convergence = converged(accForEpoch["train"], baseline, prevBestAcc)
-            if convergence == "growStop":
-                didConverge += 1
-            elif convergence == "baseline":
-                didConverge = 1000
+        convergence = converged(accForEpoch["train"], baseline, prevBestAcc)
+        if convergence == "growStop":
+            didConverge += 1
+        elif convergence == "baseline":
+            didConverge += stopEarly/2
         else:
             didConverge = 0
-        if didConverge > 10:
+        if didConverge > stopEarly:
             break;
 
         scheduler.step()
