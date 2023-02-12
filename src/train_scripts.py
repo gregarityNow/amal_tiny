@@ -16,7 +16,7 @@ def train_ViT_vanilla(opt):
     if opt.dsName == "mnist":
         train_loader, test_loader, numClasses = get_mnist_loaders(opt);
     elif opt.dsName == "cifar10":
-        train_loader, test_loader, numClasses = get_cifar10_loaders(opt);
+        train_loader, test_loader, numClasses = get_cifar_loaders(opt);
     else:
         raise Exception("Don't know dataset", opt.dsName)
 
@@ -49,7 +49,7 @@ def train_ViT(opt):
     if opt.dsName == "mnist":
         train_loader, test_loader, numClasses = get_mnist_loaders(opt);
     elif opt.dsName == "cifar10":
-        train_loader, test_loader, numClasses = get_cifar10_loaders(opt);
+        train_loader, test_loader, numClasses = get_cifar_loaders(opt);
     else:
         raise Exception("Don't know dataset",opt.dsName)
 

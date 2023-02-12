@@ -26,7 +26,7 @@ abacus: MNIST CIFAR10 on 50, ro=0.5
 24: CIFAR10 MNIST on 50, ro=0.5 (lr thang)
 
 TODO: MNIST CIFAR10 on 50, ro=0.5 minf
-
+p3 main.py -targetCompRate=32 -comp_n_epochs=20 -n_epochs=20 -batch_size=16 -dsName="cifar10 mnist" -ro=0.5 -version=0 -randomScores=1
 
 Changement de score:
 • Aléatoire
