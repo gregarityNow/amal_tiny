@@ -48,7 +48,7 @@ def train_ViT(opt):
     torch.cuda.empty_cache()
     if opt.dsName == "mnist":
         train_loader, test_loader, numClasses = get_mnist_loaders(opt);
-    elif opt.dsName == "cifar10":
+    elif "cifar" in opt.dsName:
         train_loader, test_loader, numClasses = get_cifar_loaders(opt);
     else:
         raise Exception("Don't know dataset",opt.dsName)
