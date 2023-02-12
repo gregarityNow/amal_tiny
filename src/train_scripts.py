@@ -56,7 +56,7 @@ def train_ViT(opt):
 
     allHiddenSizes = [model.hid_sizes]
 
-    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr)
+    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=not opt.startSmall)
     baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
     print("Established baseline",baselineAcc)
 
@@ -165,7 +165,7 @@ def converged(accs, baseline, prevBestAcc):
 
 
 def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criterion=nn.CrossEntropyLoss(),
-                 momentum=0.9, weight_decay=1e-4, baseline = 1, doAdapt = 1):
+                 momentum=0.9, weight_decay=1e-4, baseline = 1, doAdapt = 1, stopEarly = True):
     model = model.to(device)
     model.train()
     nonFrozenParams = getNonFrozenParams(model)
@@ -215,7 +215,7 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
         lossByEpoch["train"].extend(lossForEpoch["train"])
         accByEpoch["train"].extend(accForEpoch["train"])
 
-        if converged(accForEpoch["train"], baseline, prevBestAcc):
+        if stopEarly and converged(accForEpoch["train"], baseline, prevBestAcc):
             didConverge += 1
         else:
             didConverge = 0
