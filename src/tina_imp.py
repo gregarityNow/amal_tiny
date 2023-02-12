@@ -35,6 +35,8 @@ def rank_hidden_values(opt, model):
 				myScore = score.item()
 				if opt.randomScores:
 					myScore = np.random.rand()
+					if scoreIndex == 0:
+						print("randing that boii",myScore);
 				d = {"layerIndex": layerIndex, "scoreIndex": scoreIndex,
 					 "block": att, "score": myScore,
 					 "weightsDown": weightsDown.weight[scoreIndex].detach(),
