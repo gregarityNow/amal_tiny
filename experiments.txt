@@ -7,7 +7,7 @@ Machines:
 abacus: MNIST CIFAR10 on 50, ro=0.5
 12: CIFAR10 MNIST on 50, ro=0.5
 13: MNIST CIFAR10 on 50, ro=0.25 (30 comp_n_epochs)
-14: CIFAR10 MNIST on 50, ro=0.25 (30 comp_n_epochs)
+14: CIFAR10 MNIST on 50, ro=0.25 (30 comp_n_epochs) (dead)
 15: MNIST CIFAR10 on 50, ro=0.75 (15 comp_n_epochs)
 16: CIFAR10 MNIST on 50, ro=0.75 (15 comp_n_epochs)
 17: MNIST, 100 epochs, starting at {1,2}
