@@ -65,7 +65,11 @@ def initializeModel(opt,numClasses,compRate=1):
 		model.init_weights();
 		return model
 
-	model = ViT_TINA(opt.hid_size, n_classes=numClasses)
+	if opt.startSmall:
+		hid_sizes = {"intermediate": np.random.randint(1,3,size=12),"output":np.random.randint(1,3,size=12)}
+		model = ViT_TINA(hid_sizes, n_classes=numClasses)
+	else:
+		model = ViT_TINA(opt.hid_size, n_classes=numClasses)
 	if opt.fromBaseline:
 		loadModel(model, opt, compRate=compRate)
 	return model
