@@ -172,6 +172,8 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
     optimizer = torch.optim.SGD(nonFrozenParams, lr=lr, momentum=momentum, weight_decay=weight_decay)
     print(model)
 
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=n_epochs)
+
 
     accByEpoch, lossByEpoch = {"train": [], "test": []}, {"train": [], "test": []}
 
@@ -222,6 +224,8 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
             didConverge = 0
         if didConverge > 1:
             break;
+
+        scheduler.step()
 
     return model, accByEpoch, lossByEpoch, epoch+1
 
