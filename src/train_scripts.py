@@ -168,8 +168,9 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
                  momentum=0.9, weight_decay=1e-4, baseline = 1, doAdapt = 1, stopEarly = True):
     model = model.to(device)
     model.train()
-    nonFrozenParams = getNonFrozenParams(model)
+    nonFrozenParams = getNonFrozenParams(model, fullTrain=1-doAdapt)
     optimizer = torch.optim.SGD(nonFrozenParams, lr=lr, momentum=momentum, weight_decay=weight_decay)
+    print(model)
 
 
     accByEpoch, lossByEpoch = {"train": [], "test": []}, {"train": [], "test": []}

@@ -10,6 +10,11 @@ abacus: MNIST CIFAR10 on 50, ro=0.5
 14: CIFAR10 MNIST on 50, ro=0.25 (30 comp_n_epochs)
 15: MNIST CIFAR10 on 50, ro=0.75 (15 comp_n_epochs)
 16: CIFAR10 MNIST on 50, ro=0.75 (15 comp_n_epochs)
-17: MNIST, CIFAR, 100 epochs, starting at {1,2}
-18: CIFAR, MNIST, 100 epochs, starting at {1,2}
+17: MNIST, 100 epochs, starting at {1,2}
+18: CIFAR, 100 epochs, starting at {1,2}
+19: CIFAR, 100 epochs, starting at {1,2}
+20: -
+21: MNIST, 100 epochs, starting at {1,2}
+22: MNIST, 100 epochs, vanilla
+23: CIFAR, 100 epochs, vanilla
 
