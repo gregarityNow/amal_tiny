@@ -20,6 +20,9 @@ parser.add_argument("-ppti",type=int,default=1);
 parser.add_argument("-startSmall",type=int,default=0);
 parser.add_argument("-version",type=int,default=0);
 parser.add_argument("-stopEarly",type=int,default=10);
+parser.add_argument("-randomScores",type=int,default=0);
+parser.add_argument("-normType",type=str,default="l1");
+
 
 opt = parser.parse_args()
 

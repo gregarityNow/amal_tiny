@@ -3,7 +3,7 @@ from .basis_funcs import *
 
 from .models import ViT_TINA
 
-def rank_hidden_values(model):
+def rank_hidden_values(opt, model):
 	scores = []
 	depth = len(model.model.vit.encoder.layer)
 	for layerIndex in range(depth):
@@ -16,14 +16,27 @@ def rank_hidden_values(model):
 			weightsUp = getattr(layer, att).adapter.block[2]
 			weightsUpAbs = torch.abs(weightsUp.weight)
 
-			byRowSummationDown = torch.sum(weightsDownAbs, axis=1)
-			byRowSummationUp = torch.sum(weightsUpAbs, axis=0)
+			if opt.normType == "l1":
+				byRowSummationDown = torch.norm(weightsDownAbs, dim=1,p=1)
+				byRowSummationUp = torch.norm(weightsUpAbs, dim=0,p=1)
+			elif opt.normType == "l2":
+				byRowSummationDown = torch.norm(weightsDownAbs, dim=1, p=1)
+				byRowSummationUp = torch.norm(weightsUpAbs, dim=0, p=1)
+			elif opt.normType == "inf":
+				byRowSummationDown = torch.norm(weightsDownAbs, dim=1,p=float("inf"))
+				byRowSummationUp = torch.norm(weightsUpAbs, dim=0,p=float("inf"))
+			elif opt.normType == "minf":
+				byRowSummationDown = torch.norm(weightsDownAbs, dim=1, p=-float("inf"))
+				byRowSummationUp = torch.norm(weightsUpAbs, dim=0, p=-float("inf"))
 
 			denom = sum(weightsDownAbs.shape)
 			downUpScores = (byRowSummationDown + byRowSummationUp) / denom
 			for scoreIndex, score in enumerate(downUpScores):
+				myScore = score.item()
+				if opt.randomScores:
+					myScore = np.random.rand()
 				d = {"layerIndex": layerIndex, "scoreIndex": scoreIndex,
-					 "block": att, "score": score.item(),
+					 "block": att, "score": myScore,
 					 "weightsDown": weightsDown.weight[scoreIndex].detach(),
 					 "biasDown": weightsDown.bias[scoreIndex].detach(),
 					 "weightsUp": weightsUp.weight[:, scoreIndex].detach()}
@@ -70,8 +83,8 @@ def setBiasUp(model, hid_sizes):
 			# print("malone",getattr(layer,att).adapter.block[2].bias[:5])
 
 
-def shrinkModel(model, ro=0.75):
-	scores = rank_hidden_values(model)
+def shrinkModel(opt, model, ro=0.75):
+	scores = rank_hidden_values(opt, model)
 	# scores.sort(key = lambda dic: dic["score"],reverse=True)
 	# topNNeurons = scores[:int(len(scores)*ro)]
 

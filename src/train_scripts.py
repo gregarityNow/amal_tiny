@@ -72,7 +72,7 @@ def train_ViT(opt):
     for compRound in range(opt.comp_n_epochs):
 
         shrinkTime = time.time()
-        newModel, new_hidden_sizes = shrinkModel(model, ro)
+        newModel, new_hidden_sizes = shrinkModel(opt, model, ro)
         allHiddenSizes.append(new_hidden_sizes)
         shrinkTime = time.time( ) -shrinkTime
         print("shrunk in" ,shrinkTime)
