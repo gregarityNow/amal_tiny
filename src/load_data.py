@@ -73,12 +73,13 @@ def get_cifar10_loaders(opt):
 
 
 def saveModel(model, opt, compRate = 1):
-	if opt.quickie > -1:
-		print("not saving for quickie");
-		return;
+
 	outDir = opt.outPath + "/models/"
 	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
 	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + getOutNameForOpt(opt)  + ".cpkt"
+	if opt.quickie > -1:
+		print("not saving for quickie",outPath);
+		return;
 
 	stateDict = model.state_dict()
 	paramsDict = OrderedDict({k: stateDict[k] for k in stateDict.keys() if "adapter" in k or "classifier" in k})
