@@ -68,7 +68,7 @@ def train_ViT(opt):
 
     compRates = [1]
 
-    for compRound in range(10):
+    for compRound in range(opt.comp_n_epochs):
 
         shrinkTime = time.time()
         newModel, new_hidden_sizes = shrinkModel(model, ro)
