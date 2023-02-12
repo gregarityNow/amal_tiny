@@ -20,12 +20,18 @@ def rank_hidden_values(opt, model):
 				byRowSummationDown = torch.norm(weightsDownAbs, dim=1,p=1)
 				byRowSummationUp = torch.norm(weightsUpAbs, dim=0,p=1)
 			elif opt.normType == "l2":
+				if layerIndex == 0:
+					print("l2 normin")
 				byRowSummationDown = torch.norm(weightsDownAbs, dim=1, p=1)
 				byRowSummationUp = torch.norm(weightsUpAbs, dim=0, p=1)
 			elif opt.normType == "inf":
+				if layerIndex == 0:
+					print("inf normin")
 				byRowSummationDown = torch.norm(weightsDownAbs, dim=1,p=float("inf"))
 				byRowSummationUp = torch.norm(weightsUpAbs, dim=0,p=float("inf"))
 			elif opt.normType == "minf":
+				if layerIndex == 0:
+					print("ming normin")
 				byRowSummationDown = torch.norm(weightsDownAbs, dim=1, p=-float("inf"))
 				byRowSummationUp = torch.norm(weightsUpAbs, dim=0, p=-float("inf"))
 
