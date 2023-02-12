@@ -73,6 +73,9 @@ def get_cifar10_loaders(opt):
 
 
 def saveModel(model, opt, compRate = 1):
+	if opt.quickie > -1:
+		print("not saving for quickie");
+		return;
 	outDir = opt.outPath + "/models/"
 	pathlib.Path(outDir).mkdir(parents=True, exist_ok=True);
 	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + getOutNameForOpt(opt)  + ".cpkt"
