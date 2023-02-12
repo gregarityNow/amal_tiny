@@ -56,7 +56,7 @@ def train_ViT(opt):
 
     allHiddenSizes = [model.hid_sizes]
 
-    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=not opt.startSmall)
+    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=not (opt.startSmall or not opt.doAdapt))
     baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
     print("Established baseline",baselineAcc)
 
