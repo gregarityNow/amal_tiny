@@ -61,15 +61,15 @@ def get_cifar_loaders(opt):
 	if "100" in opt.dsName:
 		print("loading cifar100!")
 		numClasses=100
-		train_dataset = datasets.CIFAR10(root, train=True, download=True, transform=transform)
-		test_dataset = datasets.CIFAR10(root, train=False, download=True, transform=transform)
-	else:
-		print("loading cifar10!")
 		train_dataset = datasets.CIFAR100(root, train=True, download=True, transform=transform)
 		test_dataset = datasets.CIFAR100(root, train=False, download=True, transform=transform)
+	else:
+		print("loading cifar10!")
+		numClasses = 100
+		train_dataset = datasets.CIFAR10(root, train=True, download=True, transform=transform)
+		test_dataset = datasets.CIFAR10(root, train=False, download=True, transform=transform)
 
 	if opt.quickie > -1:
-		numClasses=10
 		train_dataset = torch.utils.data.Subset(train_dataset, torch.arange(opt.quickie))
 		test_dataset = torch.utils.data.Subset(test_dataset, torch.arange(opt.quickie))
 
