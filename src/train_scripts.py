@@ -149,16 +149,16 @@ def converged(accs, baseline, prevBestAcc):
     print("testing convergence for halfway",halfWay,"final",final,"baseline",baseline);
     if halfWay > final:
         print("decreasing accuracy convergence")
-        return True
+        return "growStop"
     if prevBestAcc > final:
         print("convergence due to previous epoch's best being higher")
-        return True
+        return "growStop"
     if (final-halfWay)/final < 0.02:
         print("final/halfway convergence")
-        return True
-    if (baseline-final)/baseline < 0.03:
+        return "growStop"
+    if (baseline-final)/baseline < 0.04:
         print("final/baseline convergence")
-        return True
+        return "baseline"
     print("No convergence")
     return False
 
@@ -219,11 +219,15 @@ def finetune_ViT(train_loader, test_loader, model, n_epochs=20, lr=0.01, criteri
         lossByEpoch["train"].extend(lossForEpoch["train"])
         accByEpoch["train"].extend(accForEpoch["train"])
 
-        if stopEarly and converged(accForEpoch["train"], baseline, prevBestAcc):
-            didConverge += 1
+        if stopEarly:
+            convergence = converged(accForEpoch["train"], baseline, prevBestAcc)
+            if convergence == "growStop":
+                didConverge += 1
+            elif convergence == "baseline":
+                didConverge = 1000
         else:
             didConverge = 0
-        if didConverge > 1:
+        if didConverge > 10:
             break;
 
         scheduler.step()
