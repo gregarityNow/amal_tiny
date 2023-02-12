@@ -19,6 +19,7 @@ parser.add_argument("-doAdapt",type=int,default=1);
 parser.add_argument("-ppti",type=int,default=1);
 parser.add_argument("-startSmall",type=int,default=0);
 parser.add_argument("-version",type=int,default=0);
+parser.add_argument("-stopEarly",type=int,default=10);
 
 opt = parser.parse_args()
 
