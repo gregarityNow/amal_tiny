@@ -67,8 +67,8 @@ def enumerate_results():
 	for run in os.listdir(runDataDir):
 		path = runDataDir + "/" + run;
 		if "quickie" in path: continue;
-		print("dun",run)
-		if "vanilla" in path:
+		if not "_v" in path or "anilla" in path or "mall" in path: continue
+		if "anilla" in path:
 			allLosses, allAccs = loadRunDataFromPath(path);
 		else:
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
