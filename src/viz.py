@@ -69,8 +69,12 @@ def enumerate_results(dsName):
 		if not dsName + "_" in path: continue;
 		if "quickie" in path: continue;
 		if not ("_v" in path or "anilla" in path or "mall" in path): continue
-		if "mall" in path:
-			allLosses, allAccs = loadRunDataFromPath(path);
+		if "anilla" in path or "mall" in path:
+			if "anilla" in path:
+				continue;
+				allLosses, allAccs = loadRunDataFromPath(path);
+			else:
+				allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1 * int(len(allAccs[0]["train"])*0.01)]), np.mean(allAccs[0]["test"][-1 * int(len(allAccs[0]["test"])*0.01)])
 			numEpochs = 100
 			epochSizeTrain = int(len(allAccs[0]["train"])/numEpochs)
