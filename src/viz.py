@@ -72,8 +72,8 @@ def enumerate_results(dsName):
 		if "anilla" in path:
 			allLosses, allAccs = loadRunDataFromPath(path);
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1 * int(len(allAccs[0]["train"])*0.01)]), np.mean(allAccs[0]["test"][-1 * int(len(allAccs[0]["test"])*0.01)])
-			numEpochs = len(allAccs[0])
-			epochSize = int(numEpochs/100)
+			numEpochs = 100
+			epochSize = int(len(allAccs[0]["train"])/numEpochs)
 			for index in range(numEpochs):
 				accMean = np.mean(allAccs[0]["train"][index*epochSize:((index+1)*epochSize)])
 				print(index, np.mean(allAccs[0]["train"][index*epochSize:((index+1)*epochSize)]), np.mean(allAccs[0]["test"][index*epochSize:((index+1)*epochSize)]))
