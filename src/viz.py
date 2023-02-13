@@ -83,6 +83,7 @@ def enumerate_results(dsName):
 				print(index, np.mean(allAccs[0]["train"][index*epochSizeTrain:((index+1)*epochSizeTrain)]), np.mean(allAccs[0]["test"][index*epochSizeTest:((index+1)*epochSizeTest)]))
 				if accMeanTest > testNax:
 					argNax = index
+					testNax = accMeanTest
 			print("argnax",argNax)
 		elif True:
 			continue;
