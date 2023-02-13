@@ -62,11 +62,11 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 	saveFig(opt, "accLossThroughEpochs");
 
 import os
-def enumerate_results():
+def enumerate_results(dsName):
 	runDataDir = "./../out/runData/"
 	for run in os.listdir(runDataDir):
 		path = runDataDir + "/" + run;
-
+		if not dsName + "_" in path: continue;
 		if "quickie" in path: continue;
 		if not "_v" in path or "anilla" in path or "mall" in path: continue
 		if "anilla" in path:
