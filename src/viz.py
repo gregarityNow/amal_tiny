@@ -89,7 +89,7 @@ def enumerate_results(dsName):
 					argNax = index
 					testNax = accMeanTest
 			print("argnax",argNax)
-		elif True: continue;
+		# elif True: continue;
 		else:
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
 			epochSize = int(len(allAccs[-1]["train"])/epochLengths[-1])
