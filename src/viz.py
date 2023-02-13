@@ -70,8 +70,9 @@ def enumerate_results(dsName):
 		if "quickie" in path: continue;
 		if not ("_v" in path or "anilla" in path or "mall" in path): continue
 		if "anilla" in path or "mall" in path:
+			continue;
 			if "anilla" in path:
-				continue;
+
 				allLosses, allAccs = loadRunDataFromPath(path);
 			else:
 				allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
