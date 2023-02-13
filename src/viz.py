@@ -68,7 +68,7 @@ def enumerate_results(dsName):
 		path = runDataDir + "/" + run;
 		if not dsName + "_" in path: continue;
 		if "quickie" in path: continue;
-		if not "_v" in path or "anilla" in path or "mall" in path: continue
+		if not ("_v" in path or "anilla" in path or "mall" in path): continue
 		if "anilla" in path:
 			allLosses, allAccs = loadRunDataFromPath(path);
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1 * int(len(allAccs[0]["train"])*0.01)]), np.mean(allAccs[0]["test"][-1 * int(len(allAccs[0]["test"])*0.01)])
