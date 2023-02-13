@@ -23,7 +23,6 @@ parser.add_argument("-stopEarly",type=int,default=10);
 parser.add_argument("-randomScores",type=int,default=0);
 parser.add_argument("-normType",type=str,default="l1");
 
-
 opt = parser.parse_args()
 
 for dsName in opt.dsName.split(" "):

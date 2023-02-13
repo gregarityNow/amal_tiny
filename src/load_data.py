@@ -97,13 +97,21 @@ def saveModel(model, opt, compRate = 1):
 
 
 def loadModel(model, opt, compRate=1):
-	outDir = opt.outPath + "/models/"
-	outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + getOutNameForOpt(opt) + ".cpkt"
 
-	paramsDictLoaded = torch.load(outPath)
+	#outDir = opt.outPath + "/models/"
+	#outPath = outDir + "/" + "adapter_" + str(compRate) + "_" + getOutNameForOpt(opt) + ".cpkt"
+	if opt.dsName == "cifar10":
+		modelPath = "/users/nfs/Etu2/21210942/Documents/tina/out/models/adapter_1_cifar10_50_0.25_v0.cpkt"
+
+	elif opt.dsName == "mnist":
+		modelPath = "/users/nfs/Etu2/21210942/Documents/tina/out/models/adapter_1_mnist_50_0.5_l2Norm_v0.cpkt"
+	elif opt.dsName == "cifar100":
+		modelPath = "/users/nfs/Etu2/21210942/Documents/tina/out/models/adapter_1_cifar100_50_0.25_v0.cpkt"
+	else:
+		raise Exception("Don't know ds",opt.dsName)
+	paramsDictLoaded = torch.load(modelPath)
 	model.load_state_dict(paramsDictLoaded, strict=False)
-
-	print("loaded weights from",outPath)
+	print("loaded weights from",modelPath)
 
 import pickle
 

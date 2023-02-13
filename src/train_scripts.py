@@ -45,6 +45,8 @@ def train_ViT(opt):
     allLosses = []
     allAccs = []
     epochLengths = []
+    compRates = []
+    allHiddenSizes = []
     torch.cuda.empty_cache()
     if opt.dsName == "mnist":
         train_loader, test_loader, numClasses = get_mnist_loaders(opt);
@@ -54,20 +56,19 @@ def train_ViT(opt):
         raise Exception("Don't know dataset",opt.dsName)
 
     model = initializeModel(opt, numClasses);
+    if not opt.fromBaseline:
+        allHiddenSizes.append(model.hid_sizes)
 
-    allHiddenSizes = [model.hid_sizes]
-
-    model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=opt.stopEarly)
-    baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
-    print("Established baseline",baselineAcc)
-
-    saveModel(model, opt);
-
-    allLosses.append(lossByEpoch)
-    allAccs.append(accByEpoch)
-    epochLengths.append(numEpochs)
-
-    compRates = [1]
+        model, accByEpoch, lossByEpoch, numEpochs = finetune_ViT(train_loader, test_loader ,model,n_epochs=opt.n_epochs, lr = lr,stopEarly=opt.stopEarly)
+        baselineAcc = np.mean(accByEpoch["train"][int(len(accByEpoch["train"])*0.99):])
+        print("Established baseline",baselineAcc)
+        saveModel(model, opt);
+        allLosses.append(lossByEpoch)
+        allAccs.append(accByEpoch)
+        epochLengths.append(numEpochs)
+        compRates.append(1)
+    else:
+        baselineAcc = 1
 
     for compRound in range(opt.comp_n_epochs):
 
@@ -113,6 +114,10 @@ def train_ViT(opt):
         epochLengths.append(numEpochs)
 
         saveModel(model, opt,compRate=int(currCompRate));
+
+        saveRunData(opt, (allLosses, allAccs, compRates, epochLengths, allHiddenSizes))
+
+        visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates)
 
         if currCompRate >= opt.targetCompRate:
             print("dunzo")
