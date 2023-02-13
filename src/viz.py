@@ -67,6 +67,7 @@ def enumerate_results():
 	for run in os.listdir(runDataDir):
 		path = runDataDir + "/" + run;
 		if "quickie" in path: continue;
+		print("dun",run)
 		if "vanilla" in path:
 			allLosses, allAccs = loadRunDataFromPath(path);
 		else:
