@@ -76,7 +76,7 @@ def enumerate_results(dsName):
 			epochSize = int(numEpochs/100)
 			for index in range(len(allAccs)):
 				accMean = np.mean(allAccs[index]["train"][index*epochSize:((index+1)*epochSize)])
-				print(np.mean(allAccs[index]["train"][index*epochSize:((index+1)*epochSize)]), np.mean(allAccs[index]["test"][index*epochSize:((index+1)*epochSize)]))
+				print(index, np.mean(allAccs[index]["train"][index*epochSize:((index+1)*epochSize)]), np.mean(allAccs[index]["test"][index*epochSize:((index+1)*epochSize)]))
 				if (finalTrainAcc-accMean)/finalTrainAcc < 0.01:
 					numEpochs = index+1
 					# break;
