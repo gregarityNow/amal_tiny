@@ -76,9 +76,8 @@ def enumerate_results():
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
 			epochSize = int(len(allAccs[-1]["train"])/epochLengths[-1])
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1*epochSize:]), np.mean(allAccs[0]["test"][-1*epochSize:])
-		print("path", path)
-		continue;
+
 		# print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
-		print(run, finalTrainAcc, finalTestAcc)
+		print(path,run, finalTrainAcc, finalTestAcc)
 
 
