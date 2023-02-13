@@ -85,7 +85,7 @@ def enumerate_results(dsName):
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[-1]["train"][-1*epochSize:]), np.mean(allAccs[-1]["test"][-1*epochSize:])
 			numEpochs = np.sum(epochLengths)
 		# print(run,allAccs[-1]["train"][:5],len(allAccs[-1]["train"]),epochLengths)
-		print(run,numEpochs, finalTrainAcc, finalTestAcc)
+		print(run,"num epochs:",numEpochs, "train",finalTrainAcc,"test", finalTestAcc)
 	print()
 
 
