@@ -66,6 +66,8 @@ def enumerate_results():
 	runDataDir = "./../out/runData/"
 	for run in os.listdir(runDataDir):
 		path = runDataDir + "/" + run;
+		print("path",path)
+		continue;
 		if "quickie" in path: continue;
 		if not "_v" in path or "anilla" in path or "mall" in path: continue
 		if "anilla" in path:
