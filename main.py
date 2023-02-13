@@ -37,5 +37,6 @@ for dsName in opt.dsName.split(" "):
 		visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates)
 	elif opt.runType == "enum":
 		enumerate_results()
+		break;
 
 
