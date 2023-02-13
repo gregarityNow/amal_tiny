@@ -72,6 +72,6 @@ def enumerate_results():
 			allLosses, allAccs = loadRunDataFromPath(path);
 		else:
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
-		print(run,len(allAccs))
+		print(run,len(allAccs[0]))
 
 
