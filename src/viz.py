@@ -70,8 +70,12 @@ def enumerate_results():
 		if not "_v" in path or "anilla" in path or "mall" in path: continue
 		if "anilla" in path:
 			allLosses, allAccs = loadRunDataFromPath(path);
+			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1 * int(len(allAccs[0]["train"])*0.01)]), np.mean(allAccs[0]["test"][-1 * int(len(allAccs[0]["test"])*0.01)])
 		else:
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
-		print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
+			epochSize = len(allAccs[-1]["train"])/epochLengths[-1]
+			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1*epochSize]), np.mean(allAccs[0]["test"][-1*epochSize])
+		# print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
+		print(run, finalTrainAcc, finalTestAcc)
 
 
