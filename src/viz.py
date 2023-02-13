@@ -73,10 +73,11 @@ def enumerate_results(dsName):
 			allLosses, allAccs = loadRunDataFromPath(path);
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1 * int(len(allAccs[0]["train"])*0.01)]), np.mean(allAccs[0]["test"][-1 * int(len(allAccs[0]["test"])*0.01)])
 			numEpochs = 100
-			epochSize = int(len(allAccs[0]["train"])/numEpochs)
+			epochSizeTrain = int(len(allAccs[0]["train"])/numEpochs)
+			epochSizeTest = int(len(allAccs[0]["train"]) / numEpochs)
 			for index in range(numEpochs):
-				accMean = np.mean(allAccs[0]["train"][index*epochSize:((index+1)*epochSize)])
-				print(index, np.mean(allAccs[0]["train"][index*epochSize:((index+1)*epochSize)]), np.mean(allAccs[0]["test"][index*epochSize:((index+1)*epochSize)]))
+				accMean = np.mean(allAccs[0]["train"][index*epochSizeTrain:((index+1)*epochSizeTrain)])
+				print(index, np.mean(allAccs[0]["train"][index*epochSizeTrain:((index+1)*epochSizeTrain)]), np.mean(allAccs[0]["test"][index*epochSizeTest:((index+1)*epochSizeTest)]))
 				if (finalTrainAcc-accMean)/finalTrainAcc < 0.01:
 					numEpochs = index+1
 					# break;
