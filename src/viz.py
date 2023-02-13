@@ -71,14 +71,21 @@ def enumerate_results(dsName):
 		if not ("_v" in path or "anilla" in path or "mall" in path): continue
 		if "anilla" in path:
 			allLosses, allAccs = loadRunDataFromPath(path);
-			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1 * int(len(allAccs[0]["train"])*0.01)]), np.mean(allAccs[0]["test"][-1 * int(len(allAccs[0]["test"])*0.01)])
+			finalTrainAcc, finalTestAcc = np.mean(allAccs[-1]["train"][-1 * int(len(allAccs[-1]["train"])*0.01)]), np.mean(allAccs[-1]["test"][-1 * int(len(allAccs[-1]["test"])*0.01)])
+			numEpochs = len(finalTrainAcc)
+			epochSize = len(finalTrainAcc)/100
+			for index in range(len(allAccs)):
+				accMean = np.mean(allAccs[0][index]["train"][index*epochSize:((index+1)*epochSize)])
+				if (finalTrainAcc-accMean)/finalTrainAcc < 0.01:
+					numEpochs = index+1
+					break;
 		else:
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
 			epochSize = int(len(allAccs[-1]["train"])/epochLengths[-1])
-			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1*epochSize:]), np.mean(allAccs[0]["test"][-1*epochSize:])
-
-		# print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
-		print(run,len(allAccs), finalTrainAcc, finalTestAcc)
+			finalTrainAcc, finalTestAcc = np.mean(allAccs[-1]["train"][-1*epochSize:]), np.mean(allAccs[-1]["test"][-1*epochSize:])
+			numEpochs = np.sum(epochLengths)
+		# print(run,allAccs[-1]["train"][:5],len(allAccs[-1]["train"]),epochLengths)
+		print(run,numEpochs, finalTrainAcc, finalTestAcc)
 	print()
 
 
