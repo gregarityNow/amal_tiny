@@ -78,7 +78,7 @@ def enumerate_results(dsName):
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1*epochSize:]), np.mean(allAccs[0]["test"][-1*epochSize:])
 
 		# print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
-		print(run, finalTrainAcc, finalTestAcc)
+		print(run,len(allAccs), finalTrainAcc, finalTestAcc)
 	print()
 
 
