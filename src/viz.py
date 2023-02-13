@@ -79,5 +79,6 @@ def enumerate_results(dsName):
 
 		# print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
 		print(run, finalTrainAcc, finalTestAcc)
+	print()
 
 
