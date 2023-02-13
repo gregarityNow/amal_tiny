@@ -66,8 +66,7 @@ def enumerate_results():
 	runDataDir = "./../out/runData/"
 	for run in os.listdir(runDataDir):
 		path = runDataDir + "/" + run;
-		print("path",path)
-		continue;
+
 		if "quickie" in path: continue;
 		if not "_v" in path or "anilla" in path or "mall" in path: continue
 		if "anilla" in path:
@@ -76,8 +75,9 @@ def enumerate_results():
 		else:
 			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
 			epochSize = int(len(allAccs[-1]["train"])/epochLengths[-1])
-			print("es",epochSize)
 			finalTrainAcc, finalTestAcc = np.mean(allAccs[0]["train"][-1*epochSize:]), np.mean(allAccs[0]["test"][-1*epochSize:])
+		print("path", path)
+		continue;
 		# print(run,allAccs[0]["train"][:5],len(allAccs[0]["train"]),epochLengths)
 		print(run, finalTrainAcc, finalTestAcc)
 
