@@ -3,7 +3,7 @@ from .basis_funcs import *
 
 import matplotlib.patches as patches
 
-from .load_data import saveFig
+from .load_data import saveFig, loadRunDataFromPath
 
 def getMaxLoss(allLosses):
 	maxLoss = 0
@@ -60,3 +60,15 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 	plt.suptitle("Evolution of model performance for increasing compression rate (ro="+str(opt.ro)+")")
 
 	saveFig(opt, "accLossThroughEpochs");
+
+import os
+def enumerate_results():
+	runDataDir = "./../out/runData/"
+	for run in os.listdir(runDataDir):
+		path = runDataDir + "/" + run;
+		if "vanilla" in path:
+			allLosses, allAccs = loadRunDataFromPath(path);
+		else:
+			allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunDataFromPath(path)
+		print(run,allAccs)
+

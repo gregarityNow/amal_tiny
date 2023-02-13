@@ -35,5 +35,7 @@ for dsName in opt.dsName.split(" "):
 	elif opt.runType == "viz":
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates)
+	elif opt.runType == "enum":
+		enumerate_results()
 
 

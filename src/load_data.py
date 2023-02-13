@@ -125,14 +125,16 @@ def saveRunData(opt, runData):
 
 	print("saved run data to",outPath)
 
+def loadRunDataFromPath(path):
+	with open(path,"rb") as fp:
+		runData = pickle.load(fp);
+	return runData
 
 def loadRunData(opt):
 	outDir = opt.outPath + "/runData/"
 	outPath = outDir + "/" + "adapter_" + getOutNameForOpt(opt) + ".pkl"
-	with open(outPath,"rb") as fp:
-		runData = pickle.load(fp);
+	return loadRunDataFromPath(outPath)
 
-	return runData
 
 def getOutNameForOpt(opt):
 	return opt.dsName + "_" + str(opt.hid_size) +"_"+ str(opt.ro) + ("_quickie" if opt.quickie > 0 else "") +\
@@ -146,3 +148,4 @@ def saveFig(opt, plotName):
 
 	plt.savefig(outPath)
 	print("Saved fig to",outPath)
+

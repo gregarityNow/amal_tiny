@@ -7,16 +7,16 @@ Machines:
 abacus: MNIST CIFAR10 on 50, ro=0.5
 12: CIFAR10 MNIST on 50, ro=0.5
 13: MNIST CIFAR10 on 50, ro=0.25 (30 comp_n_epochs)
-14: -
+14: • MNIST CIFAR10 on 50, ro=0.5 aleatoire v2
 15: MNIST CIFAR10 on 50, ro=0.75 (15 comp_n_epochs)
-16: CIFAR10 MNIST on 50, ro=0.75 (15 comp_n_epochs)
+16: CIFAR10 MNIST on 50, ro=0.75 (15 comp_n_epochs) v2 (just started)
 17: MNIST, 100 epochs, starting at {1,2}
     • MNIST CIFAR10 on 50, ro=0.5 aleatoire
 18: CIFAR, 100 epochs, starting at {1,2}
     • MNIST CIFAR10 on 50, ro=0.5 l2
 19: CIFAR, 100 epochs, starting at {1,2}
     • MNIST CIFAR10 on 50, ro=0.5 inf
-20: -
+20: • MNIST CIFAR10 on 50, ro=0.5 aleatoire v1
 21: MNIST, 100 epochs, starting at {1,2}
     • CIFAR100 on 50, ro=0.75 (15 comp_n_epochs)
 22: MNIST, 100 epochs, vanilla
@@ -34,3 +34,62 @@ Changement de score:
 • Max entropy
 • Gradient norm?
 
+
+Finished runs:
+cifar10:
+0.5
+vanilla
+l2
+0.25
+TODO:
+0.75 (working)
+inf (working)
+random (working)
+minf
+
+
+mnist:
+l2
+0.25
+0.75
+vanilla
+0.5
+TODO:
+inf (working)
+random (working)
+minf
+
+
+cifar100:
+0.5 (trash)
+0.25 (trash)
+TODO:
+0.75 (working)
+
+Priorities:
+0.75 (v3)
+inf
+random
+
+
+12: dead
+13: random v5
+14: random v2
+15: 75 (should finish by midnight)
+16: 75 (just started)
+17: random (I think)
+18: inf (just started v10)
+19: inf (apparently?)
+20: random
+21: minf (just started)
+22: not sure lol
+23: inf
+24: random v15
+
+Analyses todo:
+
+• table with best results for each model, dataset
+• MNIST 50 0.5 graph (done)
+• graph comparing effectiveness of different norms (just accuracy, 5 rows, 2 col)
+• graph comparing effectiveness of different ros (just accuracy, 3 rows, 2 col)
+• graphs of vanilla, startSmall
