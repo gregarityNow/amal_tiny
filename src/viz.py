@@ -62,7 +62,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 
 	saveFig(opt, "accLossThroughEpochs");
 
-
+import matplotlib.patches as mpatches
 def illustrate_layer_shrink(opt):
 	ro = 0.5
 
@@ -116,7 +116,11 @@ def illustrate_layer_shrink(opt):
 		ax.set_xlim(0,len(allHiddenSizes));
 		ax.set_ylim(0, 14);
 		ax.set_yticks([])
+		ax.set_xticks([])
 	axes[-1].set_xticklabels([str(int(x)) for x in compRates])
+
+	interm, output = mpatches.Patch(color='red', label='MSA'), mpatches.Patch(color='black', label='MLP')
+	axes[-1].legend(handles=[interm, output])
 
 
 	fig.tight_layout(rect=[0, 0.03, 1, 0.9])
