@@ -49,8 +49,8 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 	accAx.plot(smidge + np.arange(len(trainAcc)) * xPrev / len(trainAcc), trainAcc, label="Train")
 	accAx.plot(smidge + np.arange(len(testAcc)) * xPrev / len(testAcc), testAcc, label="Test")
 	accAx.legend()
-	lossAx.legend()
-	accAx.set_title("Accuracy above, loss below")
+	# lossAx.legend()
+	# accAx.set_title("Accuracy above, loss below")
 	# for ax in [accAx, lossAx]:
 	lossAx.set_xticks(np.arange(xPrev));
 	lossAx.set_ylabel("CE-Loss");
