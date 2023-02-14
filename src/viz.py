@@ -89,6 +89,7 @@ def illustrate_layer_shrink(opt):
 		ax.set_ylabel(norm)
 
 		while len(allHiddenSizes) < 6:
+			print("hup")
 			d = allHiddenSizes[-1].copy()
 			for k in d.keys():
 				d[k] = [int(max(1,d[k][i]*np.random.rand())) for i in range(len(d[k]))]
