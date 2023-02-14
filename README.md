@@ -1,4 +1,4 @@
-TO run an experiment, run:
+To run an experiment, run:
 
 python3 main.py -runType="train"
 
