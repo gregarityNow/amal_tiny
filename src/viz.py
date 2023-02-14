@@ -1,6 +1,7 @@
 
 from .basis_funcs import *
 
+from .load_data import loadRunData
 import matplotlib.patches as patches
 
 from .load_data import saveFig, loadRunDataFromPath
@@ -60,6 +61,57 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 	plt.suptitle("Evolution of model performance on " + opt.dsName.upper() + "\nfor increasing compression rate (ro="+str(opt.ro)+")")
 
 	saveFig(opt, "accLossThroughEpochs");
+
+
+def illustrate_layer_shrink(opt):
+	ro = 0.5
+
+	norms = [("l1",1),("l2",0), ("inf",11), ("minf",0),("random",2)];
+	fig, axes = plt.subplots(len(norms),1, dpi=400)
+	ax = plt.gca()
+
+
+	for normIndex, norm in enumerate(norms):
+		norm, version = norm
+		opt.version = version
+		if norm =="random":
+			opt.norm="l1"
+			opt.randomScores=1
+		else:
+			opt.norm = norm
+			opt.randomScores = 0
+		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
+		ax = axes[normIndex];
+
+		for compIndex, comps in enumerate(compRates):
+			intermediate, output = comps["intermediate"], comps["output"]
+
+			xPos = compIndex
+			rect = patches.Rectangle((xPos, 0), 1, 14, alpha=0.4,
+									 facecolor=("blue" if compIndex % 2 == 0 else "orange"))
+			ax.add_patch(rect)
+
+			compRate = str(int((1/ro)**compIndex))
+			ax.text(xPos, 13, s=r"$\sigma=$" + compRate)
+
+			for layerIndex in range(len(intermediate)):
+				for subLayerIndex, subLayer in enumerate([intermediate, output]):
+					num = subLayer[layerIndex]
+					width = (60-num)
+					xPos = compIndex + width/2
+
+					yPos = layerIndex + subLayerIndex*0.5
+					height = 0.33
+
+					rect = patches.Rectangle((xPos, yPos), width, height, alpha=0.4,
+											 facecolor=("red" if subLayerIndex % 2 == 0 else "black"))
+					ax.add_patch(rect)
+
+	fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + "\nfor increasing compression rate (ro=0.5)")
+
+	saveFig(opt, "layerShrink");
+
 
 import os
 def enumerate_results(dsName):
