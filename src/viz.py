@@ -82,6 +82,7 @@ def illustrate_layer_shrink(opt):
 			opt.randomScores = 0
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		ax = axes[normIndex];
+		ax.set_title(norm + str(len(allHiddenSizes)))
 
 		for compIndex, hids in enumerate(allHiddenSizes):
 			intermediate, output = hids["intermediate"], hids["output"]
