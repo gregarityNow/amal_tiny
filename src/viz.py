@@ -28,7 +28,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 		compressionSizeLen = epochLengths[compRateIndex]
 
 		for axIndex, ax in enumerate([accAx, lossAx]):
-			rect = patches.Rectangle((xPrev, 0), compressionSizeLen, 1.2 if axIndex == 0 else maxLoss*1.2, alpha=0.4,
+			rect = patches.Rectangle((xPrev, 0), compressionSizeLen, 1.25 if axIndex == 0 else maxLoss*1.25, alpha=0.4,
 									 facecolor=("blue" if compRateIndex % 2 == 0 else "orange"))
 			ax.add_patch(rect)
 
