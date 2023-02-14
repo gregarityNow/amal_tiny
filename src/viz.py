@@ -87,7 +87,10 @@ def illustrate_layer_shrink(opt):
 		ax.set_ylabel(norm)
 
 		while len(allHiddenSizes) < 6:
-			d = {"intermediate": np.random.randint(1,3,size=12)*(6-len(allHiddenSizes)),"output":np.random.randint(1,3,size=12)*(6-len(allHiddenSizes))}
+			if len(allHiddenSizes) == 5:
+				d = {"intermediate": np.random.randint(1,2,size=12),"output":np.random.randint(1,3,size=12)*(6-len(allHiddenSizes))}
+			else:
+				d = {"intermediate": np.random.randint(1, 2, size=12), "output": np.random.randint(1, 4, size=12) * (7 - len(allHiddenSizes))}
 			allHiddenSizes.append(d)
 
 		for compIndex, hids in enumerate(allHiddenSizes):
