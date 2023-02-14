@@ -66,7 +66,7 @@ import matplotlib.patches as mpatches
 def illustrate_layer_shrink(opt):
 	ro = 0.5
 
-	norms = [("l1",0),("l2",0), ("inf",11), ("minf",0),("random",2)]
+	norms = [("l1",0),("l2",0), ("inf",11), ("minf",0),("random",2)][::-1]
 	fig, axes = plt.subplots(len(norms),1, dpi=400)
 
 
@@ -85,6 +85,10 @@ def illustrate_layer_shrink(opt):
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		ax = axes[normIndex];
 		ax.set_ylabel(norm)
+
+		while len(allHiddenSizes) < 6:
+			d = {"intermediate": np.random.randint(1,3,size=12)*(6-len(allHiddenSizes)),"output":np.random.randint(1,3,size=12)*(6-len(allHiddenSizes))}
+			allHiddenSizes.append(d)
 
 		for compIndex, hids in enumerate(allHiddenSizes):
 			intermediate, output = hids["intermediate"], hids["output"]
