@@ -83,8 +83,8 @@ def illustrate_layer_shrink(opt):
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		ax = axes[normIndex];
 
-		for compIndex, comps in enumerate(compRates):
-			intermediate, output = comps["intermediate"], comps["output"]
+		for compIndex, hids in enumerate(allHiddenSizes):
+			intermediate, output = hids["intermediate"], hids["output"]
 
 			xPos = compIndex
 			rect = patches.Rectangle((xPos, 0), 1, 14, alpha=0.4,
