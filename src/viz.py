@@ -33,7 +33,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 			ax.add_patch(rect)
 
 			if compRates is not None:
-				ax.text(xPrev + compressionSizeLen / 2.2,(1.1 if axIndex == 0 else maxLoss*1.1), s = r"$\sigma=$"+str(compRates[compRateIndex]))
+				ax.text(xPrev + compressionSizeLen / 2.4,(1.1 if axIndex == 0 else maxLoss*1.1), s = r"$\sigma=$"+str(compRates[compRateIndex]))
 
 		xPrev += compressionSizeLen
 		trainAcc.extend(allAccs[compRateIndex]["train"])

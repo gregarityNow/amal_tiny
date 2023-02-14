@@ -93,3 +93,8 @@ Analyses todo:
 • graph comparing effectiveness of different norms (just accuracy, 5 rows, 2 col)
 • graph comparing effectiveness of different ros (just accuracy, 3 rows, 2 col)
 • graphs of vanilla, startSmall
+
+
+TODO morning:
+MNIST 75
+MNIST Random
