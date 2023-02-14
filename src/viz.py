@@ -113,7 +113,7 @@ def illustrate_layer_shrink(opt):
 
 		ax.set_xlim(0,len(allHiddenSizes));
 		ax.set_ylim(0, 14);
-		ax.set_yticks()
+		ax.set_yticks([])
 	plt.subplots_adjust(hspace=.0)
 	axes[-1].set_xticklabels([str(int(x) for x in compRates)])
 	fig.tight_layout(rect=[0, 0.03, 1, 0.95])
