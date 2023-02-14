@@ -56,7 +56,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 		ax.set_xticklabels([str(x) if x % 10 == 0 else "" for x in np.arange(xPrev)])
 		ax.set_xlabel("Epoch")
 
-	fig.tight_layout(rect=[0, 0.03, 1, 0.85])
+	fig.tight_layout(rect=[0, 0.03, 1, 0.9])
 	plt.suptitle("Evolution of model performance on " + opt.dsName.upper() + "\nfor increasing compression rate (ro="+str(opt.ro)+")")
 
 	saveFig(opt, "accLossThroughEpochs");
