@@ -33,7 +33,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 			ax.add_patch(rect)
 
 			if compRates is not None:
-				ax.text(xPrev +1,(1.1 if axIndex == 0 else maxLoss*1.1), s = r"$\sigma=$"+str(compRates[compRateIndex]))
+				ax.text(xPrev +0.7,(1.1 if axIndex == 0 else maxLoss*1.1), s = r"$\sigma=$"+str(int(compRates[compRateIndex])))
 
 		xPrev += compressionSizeLen
 		trainAcc.extend(allAccs[compRateIndex]["train"])
@@ -57,7 +57,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 		ax.set_xlabel("Epoch")
 
 	fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-	plt.suptitle("Evolution of model performance for increasing compression rate (ro="+str(opt.ro)+")")
+	plt.suptitle("Evolution of model performance on " + opt.dsName + " for increasing compression rate (ro="+str(opt.ro)+")")
 
 	saveFig(opt, "accLossThroughEpochs");
 
