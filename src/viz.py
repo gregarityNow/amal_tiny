@@ -76,10 +76,10 @@ def illustrate_layer_shrink(opt):
 		print("Norm MacDonald", norm, version);
 		opt.version = version
 		if norm =="random":
-			opt.norm="l1"
+			opt.normType="l1"
 			opt.randomScores=1
 		else:
-			opt.norm = norm
+			opt.normType = norm
 			opt.randomScores = 0
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		ax = axes[normIndex];
