@@ -121,13 +121,14 @@ def illustrate_layer_shrink(opt):
 		else:
 			ax.set_xticks(np.arange(len(compRates))+0.5)
 			ax.set_xticklabels([str(int(x)) for x in compRates])
+			ax.set_xlabel(r"Increasing compression rate $\sigma$")
 
 	interm, output = mpatches.Patch(color='red', label='MSA'), mpatches.Patch(color='black', label='MLP')
 	axes[-1].legend(handles=[interm, output])
 
 
 	fig.tight_layout(rect=[0, 0.03, 1, 0.9])
-	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + "\nfor increasing compression rate (ro=0.5)")
+	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + r"\nfor increasing compression rate ($\rho$=0.5)")
 	plt.subplots_adjust(hspace=.0)
 
 	saveFig(opt, "layerShrink");
