@@ -98,7 +98,7 @@ def illustrate_layer_shrink(opt):
 			for layerIndex in range(len(intermediate)):
 				for subLayerIndex, subLayer in enumerate([intermediate, output]):
 					num = subLayer[layerIndex]
-					width = (60-num)
+					width = (60-num)/50
 					xPos = compIndex + width/2
 
 					yPos = layerIndex + subLayerIndex*0.5
