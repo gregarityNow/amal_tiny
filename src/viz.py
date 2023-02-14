@@ -58,7 +58,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 		ax.set_xlabel("Epoch")
 
 	fig.tight_layout(rect=[0, 0.03, 1, 0.9])
-	plt.suptitle("Evolution of model performance on " + opt.dsName.upper() + "\nfor increasing compression rate (ro="+str(opt.ro)+")")
+	plt.suptitle("Evolution of model performance on " + opt.dsName.upper() + "\n"+r"for increasing compression rate ($\rho=$"+str(opt.ro)+")")
 
 	saveFig(opt, "accLossThroughEpochs");
 
@@ -128,7 +128,7 @@ def illustrate_layer_shrink(opt):
 
 
 	fig.tight_layout(rect=[0, 0.03, 1, 0.9])
-	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + r"\nfor increasing compression rate ($\rho$=0.5)")
+	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() +"\n"+ r"for increasing compression rate ($\rho$=0.5)")
 	plt.subplots_adjust(hspace=.0)
 
 	saveFig(opt, "layerShrink");
