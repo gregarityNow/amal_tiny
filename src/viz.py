@@ -111,8 +111,8 @@ def illustrate_layer_shrink(opt):
 											 facecolor=("red" if subLayerIndex % 2 == 0 else "black"))
 					ax.add_patch(rect)
 
-	plt.xlim(0,len(allHiddenSizes));
-	plt.ylim(0, 14);
+		ax.set_xlim(0,len(allHiddenSizes));
+		ax.set_ylim(0, 14);
 	fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + "\nfor increasing compression rate (ro=0.5)")
 
