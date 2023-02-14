@@ -66,7 +66,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 def illustrate_layer_shrink(opt):
 	ro = 0.5
 
-	norms = [("l1",1),("l2",0), ("inf",11), ("minf",0),("random",2)];
+	norms = [("l1",1),("l2",0), ("inf",11), ("minf",0),("random",2)][:2]
 	fig, axes = plt.subplots(len(norms),1, dpi=400)
 
 
