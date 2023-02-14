@@ -90,6 +90,8 @@ def illustrate_layer_shrink(opt):
 			d = allHiddenSizes[-1].copy()
 			for k in d.keys():
 				d[k] = [int(max(1,d[k][i]*np.random.rand())) for i in range(len(d[k]))]
+				if len(allHiddenSizes) == 5:
+					d[k] = [min(2, d[k][i] * np.random.rand()) for i in range(len(d[k]))]
 
 			allHiddenSizes.append(d)
 
