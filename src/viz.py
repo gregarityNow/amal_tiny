@@ -50,15 +50,17 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 	accAx.plot(smidge + np.arange(len(testAcc)) * xPrev / len(testAcc), testAcc, label="Test")
 	accAx.legend()
 	lossAx.legend()
-	lossAx.set_title("Loss")
-	accAx.set_title("Accuracy")
-	for ax in [accAx, lossAx]:
-		ax.set_xticks(np.arange(xPrev));
-		ax.set_xticklabels([str(x) if x % 10 == 0 else "" for x in np.arange(xPrev)])
-		ax.set_xlabel("Epoch")
+	accAx.set_title("Accuracy above, loss below")
+	# for ax in [accAx, lossAx]:
+	lossAx.set_xticks(np.arange(xPrev));
+	lossAx.set_ylabel("CE-Loss");
+	accAx.set_ylabel("Accuracy");
+	lossAx.set_xticklabels([str(x) if x % 10 == 0 else "" for x in np.arange(xPrev)])
+	lossAx.set_xlabel("Epoch")
 
 	fig.tight_layout(rect=[0, 0.03, 1, 0.9])
 	plt.suptitle("Evolution of model performance on " + opt.dsName.upper() + "\n"+r"for increasing compression rate ($\rho=$"+str(opt.ro)+")")
+	plt.subplots_adjust(hspace=.0)
 
 	saveFig(opt, "accLossThroughEpochs");
 
