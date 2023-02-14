@@ -77,12 +77,14 @@ def illustrate_layer_shrink(opt):
 		if norm =="random":
 			opt.normType="l1"
 			opt.randomScores=1
+			title = "Random Neuron Supression"
 		else:
 			opt.normType = norm
 			opt.randomScores = 0
+			title = norm + " Norm Score"
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		ax = axes[normIndex];
-		ax.set_title(norm + str(len(allHiddenSizes)))
+		ax.set_title(title)
 
 		for compIndex, hids in enumerate(allHiddenSizes):
 			intermediate, output = hids["intermediate"], hids["output"]
@@ -114,8 +116,9 @@ def illustrate_layer_shrink(opt):
 		ax.set_xlim(0,len(allHiddenSizes));
 		ax.set_ylim(0, 14);
 		ax.set_yticks([])
+		ax.set_xticklabels([str(int(x)) for x in compRates])
 	plt.subplots_adjust(hspace=.0)
-	axes[-1].set_xticklabels([str(int(x)) for x in compRates])
+
 	fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + "\nfor increasing compression rate (ro=0.5)")
 
