@@ -116,8 +116,11 @@ def illustrate_layer_shrink(opt):
 		ax.set_xlim(0,len(allHiddenSizes));
 		ax.set_ylim(0, 14);
 		ax.set_yticks([])
-		ax.set_xticks([])
-	axes[-1].set_xticklabels([str(int(x)) for x in compRates])
+		if normIndex != len(norms)-1:
+			ax.set_xticks([])
+		else:
+			ax.set_xticks(np.arange(len(compRates))+0.5)
+			ax.set_xticklabels([str(int(x)) for x in compRates])
 
 	interm, output = mpatches.Patch(color='red', label='MSA'), mpatches.Patch(color='black', label='MLP')
 	axes[-1].legend(handles=[interm, output])
