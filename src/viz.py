@@ -17,7 +17,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 
 	print("visualizing",epochLengths, compRates)
 
-	fig, (accAx, lossAx) = plt.subplots(2,1, dpi=400,figsize=(10, 6))
+	fig, (accAx, lossAx) = plt.subplots(2,1, dpi=400)
 
 	trainAcc, trainLoss, testAcc, testLoss = [], [], [], []
 	xPrev = 0
