@@ -72,8 +72,8 @@ def illustrate_layer_shrink(opt):
 
 
 	for normIndex, norm in enumerate(norms):
-		print("Norm MacDonald",norm);
 		norm, version = norm
+		print("Norm MacDonald", norm);
 		opt.version = version
 		if norm =="random":
 			opt.norm="l1"
