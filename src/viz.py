@@ -68,7 +68,6 @@ def illustrate_layer_shrink(opt):
 
 	norms = [("l1",1),("l2",0), ("inf",11), ("minf",0),("random",2)];
 	fig, axes = plt.subplots(len(norms),1, dpi=400)
-	ax = plt.gca()
 
 
 	for normIndex, norm in enumerate(norms):
@@ -104,7 +103,9 @@ def illustrate_layer_shrink(opt):
 					yPos = layerIndex + subLayerIndex*0.5
 					height = 0.33
 
-					rect = patches.Rectangle((xPos, yPos), width, height, alpha=0.4,
+					print(xPos, yPos, width, height)
+
+					rect = patches.Rectangle((xPos, yPos), width, height, alpha=1,
 											 facecolor=("red" if subLayerIndex % 2 == 0 else "black"))
 					ax.add_patch(rect)
 
