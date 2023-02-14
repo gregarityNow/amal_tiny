@@ -84,7 +84,7 @@ def illustrate_layer_shrink(opt):
 			title = norm + " Norm Score"
 		allLosses, allAccs, compRates, epochLengths, allHiddenSizes = loadRunData(opt)
 		ax = axes[normIndex];
-		ax.set_ylabel(title)
+		ax.set_ylabel(norm)
 
 		for compIndex, hids in enumerate(allHiddenSizes):
 			intermediate, output = hids["intermediate"], hids["output"]
