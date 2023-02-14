@@ -99,7 +99,7 @@ def illustrate_layer_shrink(opt):
 				for subLayerIndex, subLayer in enumerate([intermediate, output]):
 					num = subLayer[layerIndex]
 					width = num/60
-					xPos = compIndex + 1.2*width/2
+					xPos = compIndex + (1-width)/2
 
 					yPos = layerIndex + subLayerIndex*0.5
 					height = 0.33
