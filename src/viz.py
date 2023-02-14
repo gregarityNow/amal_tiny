@@ -66,7 +66,7 @@ def visualize_loss_acc(opt, allLosses, allAccs, epochLengths, compRates = None):
 def illustrate_layer_shrink(opt):
 	ro = 0.5
 
-	norms = [("l1",0),("l2",0), ("inf",11), ("minf",0),("random",2)][:2]
+	norms = [("l1",0),("l2",0), ("inf",11), ("minf",0),("random",2)]
 	fig, axes = plt.subplots(len(norms),1, dpi=400)
 
 
@@ -113,6 +113,9 @@ def illustrate_layer_shrink(opt):
 
 		ax.set_xlim(0,len(allHiddenSizes));
 		ax.set_ylim(0, 14);
+		ax.set_yticks()
+	plt.subplots_adjust(hspace=.0)
+	axes[-1].set_xticklabels([str(int(x) for x in compRates)])
 	fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 	plt.suptitle("Evolution of adapter sizes on " + opt.dsName.upper() + "\nfor increasing compression rate (ro=0.5)")
 
